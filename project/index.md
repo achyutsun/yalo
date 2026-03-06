@@ -5,5 +5,5 @@ nav_order: 3
 has_children: true
 ---
 
-# My Project Reports
-Here you will find all my project reports.
+# Yalo Project Reports
+[Milestone 1] {https://achyutsun.github.io/yalo/project/report1.html}
