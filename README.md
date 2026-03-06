@@ -1,7 +1,7 @@
 # Yalo Mobile Robot
 Team members: Yibo @JerrySyameimaru, Achyut @achyutsun, Long @lhtruong26
 
-Arizona State University RAS-598 Mobile Robotics Class
+Arizona State University RAS-598 Mobile Robotics Class  Spring, 2026
 
 Professor: Vivek Thangavelu, PhD
 
