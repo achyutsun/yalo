@@ -68,6 +68,7 @@ The experiment met all primary objectives. Future work should focus on optimizin
 ## 4. Media
 
 You can include images by placing them in the `assets/images/` folder.
+![Alt text](../assets/images/Yalo_Architecture.png)
 
 ![Alt text](../assets/images/logo.png){: width="500" }
 
