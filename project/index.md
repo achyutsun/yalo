@@ -6,4 +6,4 @@ has_children: true
 ---
 
 # Yalo Project Reports
-[Milestone 1] {https://achyutsun.github.io/yalo/project/report1.html}
+[Milestone 1] (https://achyutsun.github.io/yalo/project/report1.html)
