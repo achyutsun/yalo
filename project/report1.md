@@ -55,31 +55,17 @@ print(f"Result: {calculate_velocity(100, 20)} m/s")
 
 ---
 
-## 3. Section & Sub-sections
-
-The sidebar will automatically highlight the section you are currently viewing.
-
-### 3.1 Observations
-
-* Observation A: The system remained stable under load.
-* Observation B: Latency increased during the second trial.
-
-### 3.2 Conclusion
-
-The experiment met all primary objectives. Future work should focus on optimizing the data pipeline.
-
----
-
-## 4. High-Level System Architecture
+## 3. High-Level System Architecture
 
 You can include images by placing them in the `assets/images/` folder.
 ![Alt text](../assets/images/Yalo_Architecture.png)
 
-*Figure 1: Class Logo*
+*Fig. 1 | Architecture Diagram
+Illustration of the information gain exploration architecture for a 2D Turtlebot [a] System architecture integrating sensing, localization, mapping, and planning. [b] Entropy formulation for occupancy grid maps. [c] Frontier detection, where frontier cells are free cells adjacent to unknown regions. [d] Utility optimization maximizing expected information gain through the utility function. U(x) = I(x) -C(x), where (x) is expected mutual information and C(x) is motion cost. *
 
 ---
 
-## 5. Submission Checklist
+## 4. Submission Checklist
 
 * [x] Complete Markdown documentation
 * [x] Verify LaTeX rendering
