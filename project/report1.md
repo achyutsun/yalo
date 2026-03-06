@@ -28,7 +28,7 @@ Professor: Vivek Thangavelu, PhD
 ---
 
 ## 1. Mission Statement & Scope: 
-Yalo is a Mobile Robot. Yalo robot when entering the new environment with the information from LiDAR the Frontier detection, Entropy Exploration Algorithm maps the environment and navigates towards the target destination 
+Yalo is a Mobile Robot. Yalo robot when entering the new environment with the information from LiDAR the Frontier detection, Entropy Exploration Algorithm maps the environment and navigates towards the target destination. 
 
 ---
 
@@ -59,35 +59,14 @@ Illustration of the information gain exploration architecture for a 2D Turtlebot
 
 ---
 
+
 ## 4. Safety & Operational Protocol
 
-* [x] Complete Markdown documentation
-* [x] Verify LaTeX rendering
-* [x] Generate Mermaid flowchart
-* [ ] Peer review feedback
+* Define the software Deadman Switch or any timeout logic to prevent hardware damage in the event of communication loss. Describe the specific conditions that trigger a system-wide "E-Stop."
 
 ---
       
 ## 5. Git Infrastructure
-
-# Markdown Features
-
-## Callouts
-> This is a note
-{: .note }
-
-> This is a warning
-{: .warning }
-
-## Buttons
-[Main Button](assignment1.html){: .btn .btn-primary }
-[Blue Button](assignment2.html){: .btn .btn-blue }
-[Blue Button](assignment3.html){: .btn .btn-red }
-
-## Tables
-
-| Header | Header |
-| :--- | :--- |
-| Cell | Cell |
+https://github.com/achyutsun/yalo
 
 ---
