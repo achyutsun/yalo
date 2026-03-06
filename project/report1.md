@@ -71,6 +71,6 @@ Illustration of the information gain exploration architecture for a 2D Turtlebot
 ---
       
 ## 5. Git Infrastructure
-https://github.com/achyutsun/yalo
+[https://github.com/achyutsun/yalo](https://github.com/achyutsun/yalo)
 
 ---
