@@ -5,11 +5,14 @@ parent: Project
 nav_order: 1
 ---
 
-# Report 1: XX
+# Milestone 1: XX
 
 {: .no_toc }
 
-This page demonstrates the core capabilities of the Just the Docs theme, including navigation, mathematical typesetting, and technical diagrams.
+Yalo Mobile Robot
+Team members: Yibo @JerrySyameimaru, Achyut @achyutsun, Long @lhtruong26
+Arizona State University RAS-598 Mobile Robotics Class
+Professor: Vivek Thangavelu, PhD
 
 ---
 
