@@ -27,8 +27,8 @@ Professor: Vivek Thangavelu, PhD
 
 ---
 
-## 1. Mathematical Formulas
-The probability density function of a Gaussian distribution is defined as:
+## 1. Mission Statement & Scope: 
+Yalo is a Mobile Robot. Yalo robot when enters the new
 
 $$p(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}$$
 
@@ -38,7 +38,7 @@ Where:
 
 ---
 
-## 2. Code Implementation
+## 2. Technical Specifications
 
 Below is a snippet of the Python code used to process the assignment data.
 
@@ -70,12 +70,10 @@ The experiment met all primary objectives. Future work should focus on optimizin
 
 ---
 
-## 4. Media
+## 4. High-Level System Architecture
 
 You can include images by placing them in the `assets/images/` folder.
 ![Alt text](../assets/images/Yalo_Architecture.png)
-
-![Alt text](../assets/images/logo.png){: width="500" }
 
 *Figure 1: Class Logo*
 
