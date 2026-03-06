@@ -35,7 +35,9 @@ Yalo is a Mobile Robot. Yalo robot when entering the new environment with the in
 ## 2. Technical Specifications
 
 **Robot Platform:** TurtleBot 4
+
 **Kinematic Model:** Differential Drive
+
 **Perception Stack:** LiDAR, RGB-D, IMU
 
 Below is a snippet of the Python code used to process the assignment data.
