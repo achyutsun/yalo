@@ -43,13 +43,7 @@ Where:
 Below is a snippet of the Python code used to process the assignment data.
 
 ```python
-import numpy as np
-
-def calculate_velocity(displacement, time):
-    """Calculates average velocity."""
-    return np.divide(displacement, time)
-
-print(f"Result: {calculate_velocity(100, 20)} m/s")
+utility function. U(x) = I(x) -C(x), where (x) is expected mutual information and C(x) is motion cost. 
 
 ```
 
