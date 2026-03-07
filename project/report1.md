@@ -58,7 +58,8 @@ utility function. U(x) = I(x) -C(x), where (x) is expected mutual information an
 You can include images by placing them in the `assets/images/` folder.
 
 Mermaid Diagram
-![Alt text](../assets/images/logo.png)
+
+![Alt text](../assets/images/Active_Exploration_Bot_Flow.png)
 
 ![Alt text](../assets/images/Yalo_Architecture.png)
 
