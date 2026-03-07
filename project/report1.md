@@ -55,6 +55,9 @@ utility function. U(x) = I(x) -C(x), where (x) is expected mutual information an
 
 ## 3. High-Level System Architecture
 
+Mermaid Diagram
+![Alt text](../assets/images/Active_Exploration_Bot.png)
+
 You can include images by placing them in the `assets/images/` folder.
 ![Alt text](../assets/images/Yalo_Architecture.png)
 
