@@ -64,6 +64,8 @@ Mermaid Diagram
 *Fig. 1 | Architecture Diagram
 Illustration of the information gain exploration architecture for a 2D Turtlebot [a] System architecture integrating sensing, localization, mapping, and planning. [b] Entropy formulation for occupancy grid maps. [c] Frontier detection, where frontier cells are free cells adjacent to unknown regions. [d] Utility optimization maximizing expected information gain through the utility function. U(x) = I(x) -C(x), where (x) is expected mutual information and C(x) is motion cost. *
 
+---
+
 ### Module Declaration Table: 
 | Module / Node | Functional Domain | Software Type | Description |
 | --- | --- | --- | --- |
@@ -75,6 +77,8 @@ Illustration of the information gain exploration architecture for a 2D Turtlebot
 | **Reactive Controller** | Planning | **Custom** | A custom implementation of the Dynamic Window Approach (DWA) to handle moving obstacles in real-time. |
 | **Diff-Drive Controller** | Actuation | **Library** | Translates velocity commands into wheel rotations. |
 | **Motor Hardware Interface** | Actuation | **Custom** | Low-level serial communication logic to interface with the motor encoders. |
+
+---
 
 ### Module Intent: 
     #### Library: 
