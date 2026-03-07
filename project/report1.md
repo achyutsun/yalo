@@ -67,6 +67,7 @@ Illustration of the information gain exploration architecture for a 2D Turtlebot
 ---
 
 ### Module Declaration Table: 
+
 | Module / Node | Functional Domain | Software Type | Description |
 | --- | --- | --- | --- |
 | **LiDAR** | Perception | **Library** | Ingests raw distance and image data from the hardware. |
