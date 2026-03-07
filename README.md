@@ -10,3 +10,5 @@ Yalo is a Mobile Robot. Yalo robot when entering the new environment with the in
 The Yalo mobile robot is designed to autonomously explore and navigate previously unknown environments using LiDAR-based perception and information-theoretic exploration algorithms. By integrating frontier detection, entropy-driven exploration, and autonomous navigation, Yalo incrementally constructs a spatial representation of its surroundings while efficiently moving toward designated target destinations.
 
 The system leverages real-time LiDAR sensing and odometry data to identify unexplored regions of the environment. Using a frontier-based exploration strategy, the robot detects boundaries between known and unknown space within the occupancy grid map. These frontiers serve as candidate exploration goals.
+
+[Website](https://achyutsun.github.io/yalo/project/report1.html)
