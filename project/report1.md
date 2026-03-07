@@ -55,8 +55,6 @@ utility function. U(x) = I(x) -C(x), where (x) is expected mutual information an
 
 ## 3. High-Level System Architecture
 
-You can include images by placing them in the `assets/images/` folder.
-
 Mermaid Diagram
 
 ![Alt text](../assets/images/Active_Exploration_Bot_Flow.png)
@@ -65,6 +63,12 @@ Mermaid Diagram
 
 *Fig. 1 | Architecture Diagram
 Illustration of the information gain exploration architecture for a 2D Turtlebot [a] System architecture integrating sensing, localization, mapping, and planning. [b] Entropy formulation for occupancy grid maps. [c] Frontier detection, where frontier cells are free cells adjacent to unknown regions. [d] Utility optimization maximizing expected information gain through the utility function. U(x) = I(x) -C(x), where (x) is expected mutual information and C(x) is motion cost. *
+
+### Module Declaration Table: 
+
+### Module Intent: 
+#### Library: 
+#### Custom:
 
 ---
 
