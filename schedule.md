@@ -1,5 +1,5 @@
 ---
-title: Markdown kitchen sink
+title: Project Schedule
 layout: home
 nav_order: 99
 ---
