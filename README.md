@@ -13,5 +13,5 @@ The system leverages real-time LiDAR sensing and odometry data to identify unexp
 
 [Website](https://achyutsun.github.io/yalo/project/report1.html)
 
-![Alt text](../assets/images/Yalo_Architecture.png)
+![Alt text](/assets/images/Yalo_Architecture.png)
 Figure: YALO Mobile Robot Architecture diagram
