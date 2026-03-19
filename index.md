@@ -17,5 +17,5 @@ The Yalo mobile robot is designed to autonomously explore and navigate previousl
 
 The system leverages real-time LiDAR sensing and odometry data to identify unexplored regions of the environment. Using a frontier-based exploration strategy, the robot detects boundaries between known and unknown space within the occupancy grid map. These frontiers serve as candidate exploration goals.
 
-![Alt text](/assets/images/Yalo_Architecture.png)
+![Alt text](../assets/images/Yalo_Architecture.png)
 Figure: YALO Mobile Robot Architecture diagram
