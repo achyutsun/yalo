@@ -404,9 +404,9 @@ Instructor Feedback Integration: 'Markdown kitchen sink' is now remove and title
 Individual Contribution: 
 | Team Member | Primary Technical Role               | Key Git Commits/PRs                     | Specific File(s) Authorship (Direct Links)      | 
 |------|---------------------|-------------------------------|---------------------|
-| Long    | Frontier Calculation     | Commit  | Proposal            | 
-| Achyut Shrestha    | Entropy Exploration Algorithm   | Commit              | Summary             |
-| Yibo    | Best Frontier     | Commit                 | Plan                | 
+| Long    | Frontier Calculation     | Commit 9dbf867, d5576ca, 22e477f, dc94748  |            | 
+| Achyut Shrestha    | Entropy Exploration Algorithm   | Commit    7694b7f          |              |
+| Yibo    | Best Frontier     | Commit   163f0d2, 80ae368, d35d7e7               |                 | 
 
 
 
