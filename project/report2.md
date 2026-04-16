@@ -88,9 +88,95 @@ print(f"Result: {calculate_velocity(100, 20)} m/s")
 
 ---
 
-## 3. Section & Sub-sections
+## 3. Entropy Exploration Algorithm 
+	The real world is very dynamic and mobile robots inhabit and share the same spaces as humans, encountering moving cars, people, trains, 18-wheelers, strollers, street traffic barricades, construction, daily and numerous human activities. Even inside the home in the living room, humans don't always take the same path to go to the kitchen, moving unpredictably to the left or to the right to go to the same point A to point B in the same room or between rooms. In another scenario let’s take into consideration the static frame, NASA Lunar rover navigating the Lunar Regolith Terrain (LRT). Here in the space exploration Moon rovers, which is completely new, which doesn’t have a map, there is a challenge for mobile robots to move around. Mobile robots need to be provided with a map of the environment it is moving on. In both these scenarios of NASA Lunar rover which has completely new landscape, orientation, craters, rocks, mountains, vast basins all unique as human has not inhabited moon to take its map, and the scenario of living room during superbowl Game or just say the Mobile Robot Lab with crowd of high school students coming to watch the mobile robots will have some sort of unique obstacles of energetic dynamic moving high school students. To navigate our Yalo mobile robot in this unique environment it is quite a challenge. To simplify, the dynamic movement of high school students freezes the frame during the most crowded time of students moving from the hallway to our Mobile robot lab. If we have our Yalo mobile robot to navigate in this hallway, which is a new environment to it and say we haven’t provided the map to navigate Yalo mobile robot in this hallway.
+	This is where our Entropy Exploration Algorithm comes into play to navigate our Yalo mobile robot by autonomously mapping the new hallway calculating “Frontiers” then selecting the most informative path to reach the destination elevator, moving through the hallway from the Mobile lab.
+![Alt text](../assets/images/Architecture_Diagram_Turtlebot_4_Entropy_Exploration_Algorithm.png){: width="500" }
+*Figure: Architecture diagram of Entropy Exploration algorithm in YALO mobile robot*
+\documentclass[11pt, a4paper]{article}
 
-The sidebar will automatically highlight the section you are currently viewing.
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+\geometry{margin=2.5cm}
+
+\title{\textbf{Mathematical Core}}
+\date{}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+% ─────────────────────────────────────────────
+\section*{Shannon Binary Entropy per Cell}
+
+The binary entropy of a cell with occupancy probability~$p$ is defined as:
+
+\begin{equation}
+    H(p) \;=\; -p \log_2 p \;-\; (1 - p)\log_2(1 - p)
+\end{equation}
+
+Unknown cells (value $-1$) are mapped to $p = 0.5$, yielding $H = 1.0$~bit (maximum
+uncertainty). The entire grid is vectorised with \textsc{NumPy} — no Python loops
+over cells.
+
+% ─────────────────────────────────────────────
+\section*{Information Gain at Frontier Viewpoint}
+
+For a candidate viewpoint~$v$, the information gain is the sum of entropies over all
+cells~$c$ within a sensor disc of radius~$R_{\text{sensor}}$:
+
+\begin{equation}
+    \mathrm{IG}(v) \;=\; \sum_{c \,\in\, \mathrm{Disc}(v,\, R_{\text{sensor}})} H(c)
+\end{equation}
+
+Integration is performed over a circular disc of radius $R = 6\,\mathrm{m}$
+(RPLIDAR-A1 range) using an efficient \textsc{NumPy} slice with a circular Boolean
+mask — $\mathcal{O}(R^2)$ rather than $\mathcal{O}(W \cdot H)$.
+
+% ─────────────────────────────────────────────
+\section*{Distance-Weighted Utility (Elfes-Style)}
+
+The utility of a frontier~$f$ balances information gain against travel cost:
+
+\begin{equation}
+    U(f) \;=\; \frac{\mathrm{IG}(f)}{1 \;+\; \lambda\, d(\text{robot},\, f)}
+\end{equation}
+
+where $d(\text{robot}, f)$ is the Euclidean distance from the robot to frontier~$f$,
+and $\lambda = 0.35$ is a tunable parameter exposed via a ROS parameter server.
+
+% ─────────────────────────────────────────────
+\section*{Three Key Modules}
+
+\begin{description}[style=nextline, leftmargin=2em]
+
+    \item[\texttt{OccupancyGridManager}]
+    Wraps \texttt{nav\_msgs/OccupancyGrid} with world\,$\leftrightarrow$\,grid
+    coordinate transforms, cell classification (\texttt{is\_free},
+    \texttt{is\_unknown}, \texttt{is\_occupied}), and the entropy integration
+    disc query.
+
+    \item[\texttt{detect\_frontiers()}]
+    Implements the \emph{Wavefront Frontier Detector} (WFD): vectorised
+    free/unknown masks $\rightarrow$ 8-connected shift operations $\rightarrow$
+    BFS clustering $\rightarrow$ size filtering. No Python cell loops in Step~1.
+
+    \item[\texttt{score\_frontiers()}]
+    Calls \texttt{information\_gain\_at()} per frontier centroid, computes
+    $U(f)$ for each candidate, and returns a list sorted in descending order
+    of~$U(f)$.
+
+\end{description}
+
+\end{document}
 
 ### 3.1 Observations
 
@@ -107,9 +193,7 @@ The experiment met all primary objectives. Future work should focus on optimizin
 
 You can include images by placing them in the `assets/images/` folder.
 
-![Alt text](../assets/images/Architecture_Diagram_Turtlebot_4_Entropy_Exploration_Algorithm.png){: width="500" }
 
-*Figure: Architecture diagram of Entropy Exploration algorithm in YALO mobile robot*
 
 ---
 
