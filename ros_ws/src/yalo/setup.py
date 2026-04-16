@@ -24,7 +24,10 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'yalo = yalo.yalo:main'
+            'yalo = yalo.yalo:main',
+            'decision_maker = yalo.decision_maker:main',
+            'entropy_explorer = yalo.entropy_explorer:main',
+            'frontier_detector = yalo.frontier_detector:main',
         ],
     },
 )

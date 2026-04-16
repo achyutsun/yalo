@@ -1,4 +1,5 @@
 from collections import deque
+import math
 
 from frontier_explorer.frontier_utils import (
     find_frontiers,
@@ -17,7 +18,7 @@ from rclpy.qos import DurabilityPolicy
 from rclpy.qos import QoSProfile
 from rclpy.qos import ReliabilityPolicy
 from rclpy.time import Time
-from std_msgs.msg import Int32MultiArray
+from std_msgs.msg import Float32MultiArray, Int32MultiArray
 from tf2_ros import Buffer, TransformException, TransformListener
 from visualization_msgs.msg import Marker, MarkerArray
 
@@ -34,6 +35,7 @@ class FrontierDetector(Node):
         self.declare_parameter('timer_period', 1.0)
         self.declare_parameter('frontier_markers_topic', '/frontier_markers')
         self.declare_parameter('frontier_centroids_topic', '/frontier_centroids')
+        self.declare_parameter('frontier_entropy_topic', '/frontier_entropy_scores')
         self.declare_parameter(
             'frontier_cluster_sizes_topic',
             '/frontier_cluster_sizes',
@@ -48,6 +50,9 @@ class FrontierDetector(Node):
         )
         self.frontier_centroids_topic = (
             self.get_parameter('frontier_centroids_topic').value
+        )
+        self.frontier_entropy_topic = (
+            self.get_parameter('frontier_entropy_topic').value
         )
         self.frontier_cluster_sizes_topic = (
             self.get_parameter('frontier_cluster_sizes_topic').value
@@ -76,6 +81,11 @@ class FrontierDetector(Node):
         self.centroid_pub = self.create_publisher(
             PoseArray,
             self.frontier_centroids_topic,
+            10,
+        )
+        self.entropy_pub = self.create_publisher(
+            Float32MultiArray,
+            self.frontier_entropy_topic,
             10,
         )
         self.cluster_size_pub = self.create_publisher(
@@ -184,6 +194,7 @@ class FrontierDetector(Node):
         centroid_msg.header.frame_id = frame_id
         centroid_msg.header.stamp = stamp
 
+        entropy_msg = Float32MultiArray()
         cluster_size_msg = Int32MultiArray()
 
         centroid_points = []
@@ -222,11 +233,15 @@ class FrontierDetector(Node):
             centroid_pose.position.z = 0.12
             centroid_pose.orientation.w = 1.0
             centroid_msg.poses.append(centroid_pose)
+
+            frontier_entropy = self.estimate_frontier_entropy(map_msg, frontier)
+            entropy_msg.data.append(frontier_entropy)
             cluster_size_msg.data.append(len(frontier))
 
             centroid_points.append(Point(x=wx, y=wy, z=0.12))
             self.get_logger().info(
                 f'Centroid {index}: world=({wx:.2f}, {wy:.2f}), '
+                f'entropy={frontier_entropy:.3f}, '
                 f'cluster_size={len(frontier)}'
             )
 
@@ -254,7 +269,39 @@ class FrontierDetector(Node):
 
         self.marker_pub.publish(marker_array)
         self.centroid_pub.publish(centroid_msg)
+        self.entropy_pub.publish(entropy_msg)
         self.cluster_size_pub.publish(cluster_size_msg)
+
+    def estimate_frontier_entropy(self, map_msg, frontier):
+        """Estimate a normalized entropy score around the frontier centroid."""
+        width = map_msg.info.width
+        height = map_msg.info.height
+        resolution = map_msg.info.resolution
+        grid = np.array(map_msg.data, dtype=np.float32).reshape((height, width))
+
+        cx, cy = frontier_centroid(frontier)
+        radius_cells = max(1, int(math.ceil(0.5 / max(resolution, 1e-6))))
+
+        x0 = max(0, cx - radius_cells)
+        x1 = min(width, cx + radius_cells + 1)
+        y0 = max(0, cy - radius_cells)
+        y1 = min(height, cy + radius_cells + 1)
+
+        patch = grid[y0:y1, x0:x1]
+        unknown_mask = patch == -1
+
+        probabilities = np.where(
+            unknown_mask,
+            0.5,
+            np.clip(0.05 + (patch / 100.0) * 0.90, 1e-9, 1.0 - 1e-9),
+        )
+        entropy = -(
+            probabilities * np.log(probabilities)
+            + (1.0 - probabilities) * np.log(1.0 - probabilities)
+        ) / math.log(2.0)
+        entropy = np.where(unknown_mask, 1.0, entropy)
+
+        return float(np.mean(entropy))
 
 
 def main(args=None):
