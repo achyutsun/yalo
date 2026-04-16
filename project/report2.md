@@ -21,14 +21,53 @@ This page demonstrates the core capabilities of the Just the Docs theme, includi
 
 ---
 
-## 1. Mathematical Formulas
-The probability density function of a Gaussian distribution is defined as:
+## Kinematics
 
-$$p(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}$$
+The TurtleBot is controlled using velocity commands published to the `/cmd_vel` topic:
 
-Where:
-- $$\mu$$ is the mean (peak location).
-- $$\sigma$$ is the standard deviation (width of the "bell").
+$$
+\mathbf{u} =
+\begin{bmatrix}
+v \\
+\omega
+\end{bmatrix}
+=
+\begin{bmatrix}
+\text{linear.x} \\
+\text{angular.z}
+\end{bmatrix}
+$$
+
+The robot pose is defined as:
+
+$$
+\mathbf{x} =
+\begin{bmatrix}
+x \\
+y \\
+\theta
+\end{bmatrix}
+$$
+
+### Continuous-Time Motion Model
+
+$$
+\begin{aligned}
+\dot{x} &= v \cos\theta \\
+\dot{y} &= v \sin\theta \\
+\dot{\theta} &= \omega
+\end{aligned}
+$$
+
+### Discrete-Time Motion Model
+
+$$
+\begin{aligned}
+x_{k+1} &= x_k + v_k \cos\theta_k \Delta t \\
+y_{k+1} &= y_k + v_k \sin\theta_k \Delta t \\
+\theta_{k+1} &= \theta_k + \omega_k \Delta t
+\end{aligned}
+$$
 
 ---
 
