@@ -68,7 +68,7 @@ The experiment met all primary objectives. Future work should focus on optimizin
 
 You can include images by placing them in the `assets/images/` folder.
 
-![Alt text](../assets/images/logo.png){: width="500" }
+![Alt text](../assets/images/Architecture_Diagram_Turtlebot_4_Entropy_Exploration_Algorithm.png){: width="500" }
 
 *Figure 1: Class Logo*
 
