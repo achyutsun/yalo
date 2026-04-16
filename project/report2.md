@@ -85,6 +85,14 @@ The real world is very dynamic and mobile robots inhabit and share the same spac
 
 This is where our Entropy Exploration Algorithm comes into play to navigate our Yalo mobile robot by autonomously mapping the new hallway calculating “Frontiers” then selecting the most informative path to reach the destination elevator, moving through the hallway from the Mobile lab.
 
+Entropy Exploration Algorithm takes the Frontier captured and calculated and the algorithm provides the number from -1 to 100. 
+
+     -1   → Unknown   → p ≈ 0.50  → H ≈ 1.00 bit  (max entropy)
+      0   → Free      → p ≈ 0.05  → H ≈ 0.29 bit
+    100   → Occupied  → p ≈ 0.95  → H ≈ 0.29 bit
+
+The grouping of the Frontier is done and this cluster is used for the efficiency and with the Information-gain selects the best suitable Frontier so that YALO navigates using that selected best suitable Frontier moving towards the target. 
+
 ![Alt text](../assets/images/Architecture_Diagram_Turtlebot_4_Entropy_Exploration_Algorithm.png)
 {: width="500" }
 
@@ -93,45 +101,41 @@ This is where our Entropy Exploration Algorithm comes into play to navigate our 
 ─────────────────────────────────────────────
 #### Shannon Binary Entropy per Cell
 
-The binary entropy of a cell with occupancy probability~$p$ is defined as:
+The binary entropy of a cell with occupancy probability is defined as:
 
 \begin{equation}
     H(p) \;=\; -p \log_2 p \;-\; (1 - p)\log_2(1 - p)
 \end{equation}
 
-Unknown cells (value $-1$) are mapped to $p = 0.5$, yielding $H = 1.0$~bit (maximum
-uncertainty). The entire grid is vectorised with \textsc{NumPy} — no Python loops
-over cells.
+Unknown cells (value -1) map to p=0.5 → H=1.0 bit (maximum uncertainty). The entire grid is vectorised with NumPy — no Python loops over cells.
 ─────────────────────────────────────────────
 #### Information Gain at Frontier Viewpoint
 
-For a candidate viewpoint~$v$, the information gain is the sum of entropies over all
-cells~$c$ within a sensor disc of radius~$R_{\text{sensor}}$:
+For a candidate viewpoint, the information gain is the sum of entropies over all
+cells within a sensor disc of radius R sensor:
 
 \begin{equation}
     \mathrm{IG}(v) \;=\; \sum_{c \,\in\, \mathrm{Disc}(v,\, R_{\text{sensor}})} H(c)
 \end{equation}
 
-Integration is performed over a circular disc of radius $R = 6\,\mathrm{m}$
-(RPLIDAR-A1 range) using an efficient \textsc{NumPy} slice with a circular Boolean
-mask — $\mathcal{O}(R^2)$ rather than $\mathcal{O}(W \cdot H)$.
+Integration over a circular disc of radius R=6m (RPLIDAR-A1 range), using an efficient NumPy slice + circular boolean mask — O(R²) not O(W·H).
 
 ─────────────────────────────────────────────
 #### Distance-Weighted Utility (Elfes-Style)
 
-The utility of a frontier~$f$ balances information gain against travel cost:
+The utility of a frontier balances information gain against travel cost:
 
 \begin{equation}
     U(f) \;=\; \frac{\mathrm{IG}(f)}{1 \;+\; \lambda\, d(\text{robot},\, f)}
 \end{equation}
 
-where $d(\text{robot}, f)$ is the Euclidean distance from the robot to frontier~$f$,
-and $\lambda = 0.35$ is a tunable parameter exposed via a ROS parameter server.
-
+This balances information gain (exploration breadth) against travel cost. λ=0.35 is tunable via ROS parameter.
 ─────────────────────────────────────────────
 #### Three Key Modules
 OccupancyGridManager — wraps nav_msgs/OccupancyGrid with world↔grid coordinate transforms, cell classification (is_free, is_unknown, is_occupied), and the entropy integration disc query.
+
 detect_frontiers() — Wavefront Frontier Detector (WFD): vectorised free/unknown masks → 8-connected shift operations → BFS clustering → size filtering. No Python cell loops in Step 1.
+
 score_frontiers() — calls information_gain_at() per frontier centroid, computes utility, returns list sorted descending by U(f).
 
 
