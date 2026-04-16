@@ -1,7 +1,8 @@
 from collections import deque
 import math
+from typing import List, Tuple
 
-from frontier_explorer.frontier_utils import (
+from yalo.frontier_utils import (
     find_frontiers,
     FREE_THRESHOLD,
     frontier_centroid,
@@ -40,6 +41,9 @@ class FrontierDetector(Node):
             'frontier_cluster_sizes_topic',
             '/frontier_cluster_sizes',
         )
+        self.declare_parameter('max_published_frontiers', 8)
+        self.declare_parameter('min_published_cluster_size', 20)
+        self.declare_parameter('min_centroid_separation_m', 0.60)
 
         self.map_topic = self.get_parameter('map_topic').value
         self.global_frame = self.get_parameter('global_frame').value
@@ -56,6 +60,15 @@ class FrontierDetector(Node):
         )
         self.frontier_cluster_sizes_topic = (
             self.get_parameter('frontier_cluster_sizes_topic').value
+        )
+        self.max_published_frontiers = int(
+            self.get_parameter('max_published_frontiers').value
+        )
+        self.min_published_cluster_size = int(
+            self.get_parameter('min_published_cluster_size').value
+        )
+        self.min_centroid_separation_m = float(
+            self.get_parameter('min_centroid_separation_m').value
         )
 
         self.latest_map = None
@@ -115,7 +128,8 @@ class FrontierDetector(Node):
             return
 
         frontiers = find_frontiers(self.latest_map, robot_cell)
-        self.publish_frontiers(frontiers, self.latest_map)
+        filtered_frontiers = self.filter_frontiers(frontiers, self.latest_map)
+        self.publish_frontiers(filtered_frontiers, self.latest_map)
 
     def get_robot_cell(self, map_msg):
         """Look up the robot pose in the map frame and convert to grid."""
@@ -271,6 +285,42 @@ class FrontierDetector(Node):
         self.centroid_pub.publish(centroid_msg)
         self.entropy_pub.publish(entropy_msg)
         self.cluster_size_pub.publish(cluster_size_msg)
+
+    def filter_frontiers(self, frontiers, map_msg) -> List[List[Tuple[int, int]]]:
+        """Keep only larger and well-separated frontiers for stable visual output."""
+        if not frontiers:
+            return []
+
+        sorted_frontiers = sorted(frontiers, key=len, reverse=True)
+        selected: List[List[Tuple[int, int]]] = []
+        selected_centroids: List[Tuple[float, float]] = []
+
+        for frontier in sorted_frontiers:
+            if len(frontier) < self.min_published_cluster_size:
+                continue
+
+            cx, cy = frontier_centroid(frontier)
+            wx, wy = grid_to_world(map_msg, cx, cy)
+
+            too_close = False
+            for sx, sy in selected_centroids:
+                if math.hypot(wx - sx, wy - sy) < self.min_centroid_separation_m:
+                    too_close = True
+                    break
+
+            if too_close:
+                continue
+
+            selected.append(frontier)
+            selected_centroids.append((wx, wy))
+
+            if len(selected) >= self.max_published_frontiers:
+                break
+
+        if not selected and sorted_frontiers:
+            selected = sorted_frontiers[:1]
+
+        return selected
 
     def estimate_frontier_entropy(self, map_msg, frontier):
         """Estimate a normalized entropy score around the frontier centroid."""
