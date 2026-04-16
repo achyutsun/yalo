@@ -138,6 +138,8 @@ detect_frontiers() — Wavefront Frontier Detector (WFD): vectorised free/unknow
 
 score_frontiers() — calls information_gain_at() per frontier centroid, computes utility, returns list sorted descending by U(f).
 
+## 3. Experimental Analysis & Validation
+https://youtu.be/2M4OItG_boE
 
 ### 3.1 Observations
 
