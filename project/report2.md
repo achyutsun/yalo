@@ -157,9 +157,18 @@ https://youtu.be/2M4OItG_boE
 
 ---
 
-## 4. Media
+## 4. Project Management
 
-You can include images by placing them in the `assets/images/` folder.
+Instructor Feedback Integration: 'Markdown kitchen sink' is now remove and title of the webpage is updated. https://achyutsun.github.io/yalo/ 
+
+Individual Contribution: 
+| Team Member | Primary Technical Role               | Key Git Commits/PRs                     | Specific File(s) Authorship (Direct Links)      | 
+|------|---------------------|-------------------------------|---------------------|
+| Long    | Frontier Calculation     | Commit  | Proposal            | 
+| Achyut Shrestha    | Entropy Exploration Algorithm   | Commit              | Summary             |
+| Yibo    | Best Frontier     | Commit                 | Plan                | 
+
+
 
 
 
