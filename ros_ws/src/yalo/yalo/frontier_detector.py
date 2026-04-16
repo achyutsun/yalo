@@ -10,7 +10,7 @@ from yalo.frontier_utils import (
     grid_to_world,
     world_to_grid,
 )
-from geometry_msgs.msg import Point, Pose, PoseArray
+from geometry_msgs.msg import Point, Pose, PoseArray, PoseStamped
 from nav_msgs.msg import OccupancyGrid
 import numpy as np
 import rclpy
@@ -19,7 +19,7 @@ from rclpy.qos import DurabilityPolicy
 from rclpy.qos import QoSProfile
 from rclpy.qos import ReliabilityPolicy
 from rclpy.time import Time
-from std_msgs.msg import Float32MultiArray, Int32MultiArray
+from std_msgs.msg import ColorRGBA, Float32MultiArray, Int32MultiArray
 from tf2_ros import Buffer, TransformException, TransformListener
 from visualization_msgs.msg import Marker, MarkerArray
 
@@ -41,6 +41,8 @@ class FrontierDetector(Node):
             'frontier_cluster_sizes_topic',
             '/frontier_cluster_sizes',
         )
+        self.declare_parameter('goal_topic', '/goal_pose')
+        self.declare_parameter('goal_match_tolerance_m', 0.40)
         self.declare_parameter('max_published_frontiers', 8)
         self.declare_parameter('min_published_cluster_size', 20)
         self.declare_parameter('min_centroid_separation_m', 0.60)
@@ -61,6 +63,10 @@ class FrontierDetector(Node):
         self.frontier_cluster_sizes_topic = (
             self.get_parameter('frontier_cluster_sizes_topic').value
         )
+        self.goal_topic = self.get_parameter('goal_topic').value
+        self.goal_match_tolerance_m = float(
+            self.get_parameter('goal_match_tolerance_m').value
+        )
         self.max_published_frontiers = int(
             self.get_parameter('max_published_frontiers').value
         )
@@ -72,6 +78,7 @@ class FrontierDetector(Node):
         )
 
         self.latest_map = None
+        self.latest_goal_world = None
 
         map_qos = QoSProfile(
             depth=1,
@@ -84,6 +91,12 @@ class FrontierDetector(Node):
             self.map_topic,
             self.map_callback,
             map_qos,
+        )
+        self.goal_sub = self.create_subscription(
+            PoseStamped,
+            self.goal_topic,
+            self.goal_callback,
+            10,
         )
 
         self.marker_pub = self.create_publisher(
@@ -118,6 +131,12 @@ class FrontierDetector(Node):
 
     def map_callback(self, msg):
         self.latest_map = msg
+
+    def goal_callback(self, msg: PoseStamped):
+        self.latest_goal_world = (
+            msg.pose.position.x,
+            msg.pose.position.y,
+        )
 
     def timer_callback(self):
         if self.latest_map is None:
@@ -212,6 +231,7 @@ class FrontierDetector(Node):
         cluster_size_msg = Int32MultiArray()
 
         centroid_points = []
+        centroid_colors = []
 
         for index, frontier in enumerate(frontiers):
             frontier_marker = Marker()
@@ -253,6 +273,10 @@ class FrontierDetector(Node):
             cluster_size_msg.data.append(len(frontier))
 
             centroid_points.append(Point(x=wx, y=wy, z=0.12))
+            if self.is_goal_centroid(wx, wy):
+                centroid_colors.append(ColorRGBA(r=0.0, g=0.35, b=1.0, a=1.0))
+            else:
+                centroid_colors.append(ColorRGBA(r=0.0, g=1.0, b=0.0, a=1.0))
             self.get_logger().info(
                 f'Centroid {index}: world=({wx:.2f}, {wy:.2f}), '
                 f'entropy={frontier_entropy:.3f}, '
@@ -270,11 +294,12 @@ class FrontierDetector(Node):
         centroid_marker.scale.x = 0.28
         centroid_marker.scale.y = 0.28
         centroid_marker.scale.z = 0.28
-        centroid_marker.color.r = 0.0
+        centroid_marker.color.r = 1.0
         centroid_marker.color.g = 1.0
-        centroid_marker.color.b = 0.0
+        centroid_marker.color.b = 1.0
         centroid_marker.color.a = 1.0
         centroid_marker.points = centroid_points
+        centroid_marker.colors = centroid_colors
         marker_array.markers.append(centroid_marker)
 
         self.get_logger().info(
@@ -321,6 +346,17 @@ class FrontierDetector(Node):
             selected = sorted_frontiers[:1]
 
         return selected
+
+    def is_goal_centroid(self, centroid_x: float, centroid_y: float) -> bool:
+        """Return True if centroid is close to the latest navigation goal."""
+        if self.latest_goal_world is None:
+            return False
+
+        gx, gy = self.latest_goal_world
+        return (
+            math.hypot(centroid_x - gx, centroid_y - gy)
+            <= self.goal_match_tolerance_m
+        )
 
     def estimate_frontier_entropy(self, map_msg, frontier):
         """Estimate a normalized entropy score around the frontier centroid."""
