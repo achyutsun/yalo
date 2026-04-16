@@ -21,7 +21,7 @@ This page demonstrates the core capabilities of the Just the Docs theme, includi
 
 ---
 
-## Kinematics
+## 1. Kinematics
 
 The TurtleBot is controlled using velocity commands published to the `/cmd_vel` topic:
 
@@ -71,20 +71,11 @@ $$
 
 ---
 
-## 2. Code Implementation
+## 2. System Architecture
 
-Below is a snippet of the Python code used to process the assignment data.
+Mermaid Diagram
 
-```python
-import numpy as np
-
-def calculate_velocity(displacement, time):
-    """Calculates average velocity."""
-    return np.divide(displacement, time)
-
-print(f"Result: {calculate_velocity(100, 20)} m/s")
-
-```
+![Alt text](../assets/images/Active_Exploration_Bot_Flow_1.png)
 
 ---
 
