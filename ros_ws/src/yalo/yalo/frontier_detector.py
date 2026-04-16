@@ -1,6 +1,6 @@
 from collections import deque
 
-from frontier_explorer.frontier_utils import (
+from yalo.frontier_utils import (
     find_frontiers,
     FREE_THRESHOLD,
     frontier_centroid,

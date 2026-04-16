@@ -24,7 +24,9 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'yalo = yalo.yalo:main'
+            'yalo = yalo.yalo:main',
+            'frontier_detector = yalo.frontier_detector:main',
+            'cluster_goal_selector = yalo.cluster_goal_selector:main',
         ],
     },
 )
