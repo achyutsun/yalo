@@ -79,7 +79,8 @@ Mermaid Diagram
 
 ---
 
-## 3. Entropy Exploration Algorithm 
+### Module Descriptions 
+#### Entropy Exploration Algorithm 
 The real world is very dynamic and mobile robots inhabit and share the same spaces as humans, encountering moving cars, people, trains, 18-wheelers, strollers, street traffic barricades, construction, daily and numerous human activities. Even inside the home in the living room, humans don't always take the same path to go to the kitchen, moving unpredictably to the left or to the right to go to the same point A to point B in the same room or between rooms. In another scenario let’s take into consideration the static frame, NASA Lunar rover navigating the Lunar Regolith Terrain (LRT). Here in the space exploration Moon rovers, which is completely new, which doesn’t have a map, there is a challenge for mobile robots to move around. Mobile robots need to be provided with a map of the environment it is moving on. In both these scenarios of NASA Lunar rover which has completely new landscape, orientation, craters, rocks, mountains, vast basins all unique as human has not inhabited moon to take its map, and the scenario of living room during superbowl Game or just say the Mobile Robot Lab with crowd of high school students coming to watch the mobile robots will have some sort of unique obstacles of energetic dynamic moving high school students. To navigate our Yalo mobile robot in this unique environment it is quite a challenge. To simplify, the dynamic movement of high school students freezes the frame during the most crowded time of students moving from the hallway to our Mobile robot lab. If we have our Yalo mobile robot to navigate in this hallway, which is a new environment to it and say we haven’t provided the map to navigate Yalo mobile robot in this hallway.
 
 This is where our Entropy Exploration Algorithm comes into play to navigate our Yalo mobile robot by autonomously mapping the new hallway calculating “Frontiers” then selecting the most informative path to reach the destination elevator, moving through the hallway from the Mobile lab.
@@ -89,9 +90,9 @@ This is where our Entropy Exploration Algorithm comes into play to navigate our 
 
 *Figure: Architecture diagram of Entropy Exploration algorithm in YALO mobile robot*
 
-% ─────────────────────────────────────────────
-### Shannon Binary Entropy per Cell
-$$
+─────────────────────────────────────────────
+#### Shannon Binary Entropy per Cell
+
 The binary entropy of a cell with occupancy probability~$p$ is defined as:
 
 \begin{equation}
@@ -101,9 +102,8 @@ The binary entropy of a cell with occupancy probability~$p$ is defined as:
 Unknown cells (value $-1$) are mapped to $p = 0.5$, yielding $H = 1.0$~bit (maximum
 uncertainty). The entire grid is vectorised with \textsc{NumPy} — no Python loops
 over cells.
-$$
-% ─────────────────────────────────────────────
-### Information Gain at Frontier Viewpoint
+─────────────────────────────────────────────
+#### Information Gain at Frontier Viewpoint
 
 For a candidate viewpoint~$v$, the information gain is the sum of entropies over all
 cells~$c$ within a sensor disc of radius~$R_{\text{sensor}}$:
@@ -116,8 +116,8 @@ Integration is performed over a circular disc of radius $R = 6\,\mathrm{m}$
 (RPLIDAR-A1 range) using an efficient \textsc{NumPy} slice with a circular Boolean
 mask — $\mathcal{O}(R^2)$ rather than $\mathcal{O}(W \cdot H)$.
 
-% ─────────────────────────────────────────────
-### Distance-Weighted Utility (Elfes-Style)
+─────────────────────────────────────────────
+#### Distance-Weighted Utility (Elfes-Style)
 
 The utility of a frontier~$f$ balances information gain against travel cost:
 
@@ -128,12 +128,12 @@ The utility of a frontier~$f$ balances information gain against travel cost:
 where $d(\text{robot}, f)$ is the Euclidean distance from the robot to frontier~$f$,
 and $\lambda = 0.35$ is a tunable parameter exposed via a ROS parameter server.
 
-% ─────────────────────────────────────────────
-### Three Key Modules
+─────────────────────────────────────────────
+#### Three Key Modules
 OccupancyGridManager — wraps nav_msgs/OccupancyGrid with world↔grid coordinate transforms, cell classification (is_free, is_unknown, is_occupied), and the entropy integration disc query.
 detect_frontiers() — Wavefront Frontier Detector (WFD): vectorised free/unknown masks → 8-connected shift operations → BFS clustering → size filtering. No Python cell loops in Step 1.
 score_frontiers() — calls information_gain_at() per frontier centroid, computes utility, returns list sorted descending by U(f).
-$$
+
 
 ### 3.1 Observations
 
