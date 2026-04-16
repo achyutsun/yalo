@@ -70,7 +70,7 @@ You can include images by placing them in the `assets/images/` folder.
 
 ![Alt text](../assets/images/Architecture_Diagram_Turtlebot_4_Entropy_Exploration_Algorithm.png){: width="500" }
 
-*Figure 1: Class Logo*
+*Figure: Architecture diagram of Entropy Exploration algorithm in YALO mobile robot*
 
 ---
 
