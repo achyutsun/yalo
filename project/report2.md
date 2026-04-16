@@ -4,7 +4,7 @@ title: "Report 2"
 parent: Project
 nav_order: 2
 ---
-# Report 2: YY
+# Milestone 2: Yalo Mobile Robot 
 
 {: .no_toc }
 
