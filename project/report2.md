@@ -402,6 +402,7 @@ https://youtu.be/2M4OItG_boE
 Instructor Feedback Integration: 'Markdown kitchen sink' is now remove and title of the webpage is updated. https://achyutsun.github.io/yalo/ 
 
 Individual Contribution: 
+
 | Team Member | Primary Technical Role | Key Git Commits/PRs | Specific File(s) Authorship (Direct Links) |
 |-------------|------------------------|---------------------|--------------------------------------------|
 | Long | Frontier Detection | [Commit `d5576ca`] | `frontier.rviz`, `frontier_utils.py`, `frontier_detector.py` |
