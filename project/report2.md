@@ -95,10 +95,11 @@ This is where our Entropy Exploration Algorithm comes into play to navigate our 
 
 ![Alt text](../assets/images/Architecture_Diagram_Turtlebot_4_Entropy_Exploration_Algorithm.png)
 {: width="500" }
+
 *Figure: Architecture diagram of Entropy Exploration algorithm in YALO mobile robot*
 
 % ─────────────────────────────────────────────
-###Shannon Binary Entropy per Cell
+### Shannon Binary Entropy per Cell
 $$
 The binary entropy of a cell with occupancy probability~$p$ is defined as:
 
@@ -111,7 +112,7 @@ uncertainty). The entire grid is vectorised with \textsc{NumPy} — no Python lo
 over cells.
 $$
 % ─────────────────────────────────────────────
-\section*{Information Gain at Frontier Viewpoint}
+### Information Gain at Frontier Viewpoint
 
 For a candidate viewpoint~$v$, the information gain is the sum of entropies over all
 cells~$c$ within a sensor disc of radius~$R_{\text{sensor}}$:
@@ -125,7 +126,7 @@ Integration is performed over a circular disc of radius $R = 6\,\mathrm{m}$
 mask — $\mathcal{O}(R^2)$ rather than $\mathcal{O}(W \cdot H)$.
 
 % ─────────────────────────────────────────────
-\section*{Distance-Weighted Utility (Elfes-Style)}
+### Distance-Weighted Utility (Elfes-Style)
 
 The utility of a frontier~$f$ balances information gain against travel cost:
 
@@ -137,29 +138,10 @@ where $d(\text{robot}, f)$ is the Euclidean distance from the robot to frontier~
 and $\lambda = 0.35$ is a tunable parameter exposed via a ROS parameter server.
 
 % ─────────────────────────────────────────────
-\section*{Three Key Modules}
-
-\begin{description}[style=nextline, leftmargin=2em]
-
-    \item[\texttt{OccupancyGridManager}]
-    Wraps \texttt{nav\_msgs/OccupancyGrid} with world\,$\leftrightarrow$\,grid
-    coordinate transforms, cell classification (\texttt{is\_free},
-    \texttt{is\_unknown}, \texttt{is\_occupied}), and the entropy integration
-    disc query.
-
-    \item[\texttt{detect\_frontiers()}]
-    Implements the \emph{Wavefront Frontier Detector} (WFD): vectorised
-    free/unknown masks $\rightarrow$ 8-connected shift operations $\rightarrow$
-    BFS clustering $\rightarrow$ size filtering. No Python cell loops in Step~1.
-
-    \item[\texttt{score\_frontiers()}]
-    Calls \texttt{information\_gain\_at()} per frontier centroid, computes
-    $U(f)$ for each candidate, and returns a list sorted in descending order
-    of~$U(f)$.
-
-\end{description}
-
-\end{document}
+### Three Key Modules
+OccupancyGridManager — wraps nav_msgs/OccupancyGrid with world↔grid coordinate transforms, cell classification (is_free, is_unknown, is_occupied), and the entropy integration disc query.
+detect_frontiers() — Wavefront Frontier Detector (WFD): vectorised free/unknown masks → 8-connected shift operations → BFS clustering → size filtering. No Python cell loops in Step 1.
+score_frontiers() — calls information_gain_at() per frontier centroid, computes utility, returns list sorted descending by U(f).
 $$
 
 ### 3.1 Observations
