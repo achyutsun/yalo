@@ -402,11 +402,11 @@ https://youtu.be/2M4OItG_boE
 Instructor Feedback Integration: 'Markdown kitchen sink' is now remove and title of the webpage is updated. https://achyutsun.github.io/yalo/ 
 
 Individual Contribution: 
-| Team Member | Primary Technical Role | Key Git Commits/PRs                                                                 | Specific File(s) Authorship (Direct Links)                  |
-|-------------|------------------------|--------------------------------------------------------------------------------------|------------------------------------------------------------|
-| Long        | Frontier Detection     | [Commit `d5576ca`] | `frontier.rviz`, `frontier_utils.py`, `frontier_detector.py` |
-| Yibo        | Decision Making        | [Commit `80ae368`] | `frontier_detector.py`, `decision_maker.py`                 |
-| Achyut      | Entropy Exploration    | [Commit `41ecafd`] | `entropy_explorer.py`                                       |
+| Team Member | Primary Technical Role | Key Git Commits/PRs | Specific File(s) Authorship (Direct Links)                   |
+|-------------|------------------------|---------------------|--------------------------------------------------------------|
+| Long        | Frontier Detection     | [Commit `d5576ca`]  | `frontier.rviz`, `frontier_utils.py`, `frontier_detector.py` |
+| Yibo        | Decision Making        | [Commit `80ae368`]  | `frontier_detector.py`, `decision_maker.py`                  |
+| Achyut      | Entropy Exploration    | [Commit `41ecafd`]  | `entropy_explorer.py`                                        |
 
 
 
