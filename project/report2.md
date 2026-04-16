@@ -89,10 +89,12 @@ print(f"Result: {calculate_velocity(100, 20)} m/s")
 ---
 
 ## 3. Entropy Exploration Algorithm 
-	The real world is very dynamic and mobile robots inhabit and share the same spaces as humans, encountering moving cars, people, trains, 18-wheelers, strollers, street traffic barricades, construction, daily and numerous human activities. Even inside the home in the living room, humans don't always take the same path to go to the kitchen, moving unpredictably to the left or to the right to go to the same point A to point B in the same room or between rooms. In another scenario let’s take into consideration the static frame, NASA Lunar rover navigating the Lunar Regolith Terrain (LRT). Here in the space exploration Moon rovers, which is completely new, which doesn’t have a map, there is a challenge for mobile robots to move around. Mobile robots need to be provided with a map of the environment it is moving on. In both these scenarios of NASA Lunar rover which has completely new landscape, orientation, craters, rocks, mountains, vast basins all unique as human has not inhabited moon to take its map, and the scenario of living room during superbowl Game or just say the Mobile Robot Lab with crowd of high school students coming to watch the mobile robots will have some sort of unique obstacles of energetic dynamic moving high school students. To navigate our Yalo mobile robot in this unique environment it is quite a challenge. To simplify, the dynamic movement of high school students freezes the frame during the most crowded time of students moving from the hallway to our Mobile robot lab. If we have our Yalo mobile robot to navigate in this hallway, which is a new environment to it and say we haven’t provided the map to navigate Yalo mobile robot in this hallway.
-	This is where our Entropy Exploration Algorithm comes into play to navigate our Yalo mobile robot by autonomously mapping the new hallway calculating “Frontiers” then selecting the most informative path to reach the destination elevator, moving through the hallway from the Mobile lab.
+The real world is very dynamic and mobile robots inhabit and share the same spaces as humans, encountering moving cars, people, trains, 18-wheelers, strollers, street traffic barricades, construction, daily and numerous human activities. Even inside the home in the living room, humans don't always take the same path to go to the kitchen, moving unpredictably to the left or to the right to go to the same point A to point B in the same room or between rooms. In another scenario let’s take into consideration the static frame, NASA Lunar rover navigating the Lunar Regolith Terrain (LRT). Here in the space exploration Moon rovers, which is completely new, which doesn’t have a map, there is a challenge for mobile robots to move around. Mobile robots need to be provided with a map of the environment it is moving on. In both these scenarios of NASA Lunar rover which has completely new landscape, orientation, craters, rocks, mountains, vast basins all unique as human has not inhabited moon to take its map, and the scenario of living room during superbowl Game or just say the Mobile Robot Lab with crowd of high school students coming to watch the mobile robots will have some sort of unique obstacles of energetic dynamic moving high school students. To navigate our Yalo mobile robot in this unique environment it is quite a challenge. To simplify, the dynamic movement of high school students freezes the frame during the most crowded time of students moving from the hallway to our Mobile robot lab. If we have our Yalo mobile robot to navigate in this hallway, which is a new environment to it and say we haven’t provided the map to navigate Yalo mobile robot in this hallway.
+
+This is where our Entropy Exploration Algorithm comes into play to navigate our Yalo mobile robot by autonomously mapping the new hallway calculating “Frontiers” then selecting the most informative path to reach the destination elevator, moving through the hallway from the Mobile lab.
 ![Alt text](../assets/images/Architecture_Diagram_Turtlebot_4_Entropy_Exploration_Algorithm.png){: width="500" }
 *Figure: Architecture diagram of Entropy Exploration algorithm in YALO mobile robot*
+$$
 \documentclass[11pt, a4paper]{article}
 
 \usepackage{amsmath}
@@ -177,6 +179,7 @@ and $\lambda = 0.35$ is a tunable parameter exposed via a ROS parameter server.
 \end{description}
 
 \end{document}
+$$
 
 ### 3.1 Observations
 
