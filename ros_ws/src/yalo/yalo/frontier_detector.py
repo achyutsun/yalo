@@ -146,6 +146,7 @@ class FrontierDetector(Node):
         if robot_cell is None:
             return
 
+        #Find the frontiers
         frontiers = find_frontiers(self.latest_map, robot_cell)
         filtered_frontiers = self.filter_frontiers(frontiers, self.latest_map)
         self.publish_frontiers(filtered_frontiers, self.latest_map)
