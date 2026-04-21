@@ -148,6 +148,7 @@ class FrontierDetector(Node):
 
         #Find the frontiers
         frontiers = find_frontiers(self.latest_map, robot_cell)
+        #Filter the frontiers
         filtered_frontiers = self.filter_frontiers(frontiers, self.latest_map)
         self.publish_frontiers(filtered_frontiers, self.latest_map)
 
