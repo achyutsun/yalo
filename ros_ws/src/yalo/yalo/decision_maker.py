@@ -1,13 +1,5 @@
 #!/usr/bin/env python3
-"""Weighted frontier decision node.
-
-This node chooses the next frontier cluster goal using:
-1. Entropy score (prefer higher)
-2. Distance from robot to cluster (prefer lower)
-3. Distance from previous goal to cluster (prefer lower for consistency)
-
-If entropy values are not available yet, it falls back to cluster sizes.
-"""
+"""Decision maker that directly reuses entropy_explorer frontier logic."""
 
 from __future__ import annotations
 
@@ -16,263 +8,218 @@ from dataclasses import dataclass
 from typing import List, Optional, Sequence, Tuple
 
 import rclpy
-from geometry_msgs.msg import Point, PoseArray, PoseStamped, Quaternion
-from nav_msgs.msg import Odometry
+from geometry_msgs.msg import Point, PoseStamped, Quaternion
+from nav_msgs.msg import OccupancyGrid, Odometry
 from rclpy.node import Node
-from std_msgs.msg import Float32MultiArray, Int32MultiArray
+from rclpy.qos import (
+    QoSDurabilityPolicy,
+    QoSHistoryPolicy,
+    QoSProfile,
+    QoSReliabilityPolicy,
+)
+
+from yalo.entropy_explorer import OccupancyGridManager, detect_frontiers
 
 
 @dataclass
 class FrontierCandidate:
-	"""Container for one frontier candidate."""
+    """Scored frontier candidate derived from entropy_explorer outputs."""
 
-	index: int
-	x: float
-	y: float
-	entropy_norm: float
-	score: float = 0.0
+    x: float
+    y: float
+    entropy_norm: float
+    dist_robot_norm: float
+    dist_prev_norm: float
+    score: float
 
 
 class DecisionMaker(Node):
-	"""Pick and publish the best frontier goal."""
+    """Choose a goal frontier using entropy and consistency weighting."""
 
-	def __init__(self) -> None:
-		super().__init__('decision_maker')
+    def __init__(self) -> None:
+        super().__init__('decision_maker')
 
-		self.declare_parameter('frontier_centroids_topic', '/frontier_centroids')
-		self.declare_parameter('frontier_entropy_topic', '/frontier_entropy_scores')
-		self.declare_parameter('frontier_cluster_sizes_topic', '/frontier_cluster_sizes')
-		self.declare_parameter('odom_topic', '/odom')
-		self.declare_parameter('goal_topic', '/goal_pose')
-		self.declare_parameter('goal_frame', 'map')
-		self.declare_parameter('decision_period', 1.0)
+        self.declare_parameter('map_topic', '/map')
+        self.declare_parameter('odom_topic', '/odom')
+        self.declare_parameter('goal_topic', '/goal_pose')
+        self.declare_parameter('goal_frame', 'map')
+        self.declare_parameter('decision_period', 1.0)
 
-		self.declare_parameter('entropy_weight', 1.0)
-		self.declare_parameter('distance_weight', 0.25)
-		self.declare_parameter('consistency_weight', 0.45)
-		self.declare_parameter('switch_margin', 0.15)
-		self.declare_parameter('same_goal_tolerance', 0.20)
+        self.declare_parameter('entropy_weight', 1.0)
+        self.declare_parameter('distance_weight', 0.25)
+        self.declare_parameter('consistency_weight', 0.45)
+        self.declare_parameter('switch_margin', 0.15)
+        self.declare_parameter('same_goal_tolerance', 0.20)
 
-		self.frontier_centroids_topic = self.get_parameter(
-			'frontier_centroids_topic'
-		).value
-		self.frontier_entropy_topic = self.get_parameter(
-			'frontier_entropy_topic'
-		).value
-		self.frontier_cluster_sizes_topic = self.get_parameter(
-			'frontier_cluster_sizes_topic'
-		).value
-		self.odom_topic = self.get_parameter('odom_topic').value
-		self.goal_topic = self.get_parameter('goal_topic').value
-		self.goal_frame = self.get_parameter('goal_frame').value
-		self.decision_period = float(self.get_parameter('decision_period').value)
+        self.map_topic = self.get_parameter('map_topic').value
+        self.odom_topic = self.get_parameter('odom_topic').value
+        self.goal_topic = self.get_parameter('goal_topic').value
+        self.goal_frame = self.get_parameter('goal_frame').value
+        self.decision_period = float(self.get_parameter('decision_period').value)
 
-		self.entropy_weight = float(self.get_parameter('entropy_weight').value)
-		self.distance_weight = float(self.get_parameter('distance_weight').value)
-		self.consistency_weight = float(
-			self.get_parameter('consistency_weight').value
-		)
-		self.switch_margin = float(self.get_parameter('switch_margin').value)
-		self.same_goal_tolerance = float(
-			self.get_parameter('same_goal_tolerance').value
-		)
+        self.entropy_weight = float(self.get_parameter('entropy_weight').value)
+        self.distance_weight = float(self.get_parameter('distance_weight').value)
+        self.consistency_weight = float(
+            self.get_parameter('consistency_weight').value
+        )
+        self.switch_margin = float(self.get_parameter('switch_margin').value)
+        self.same_goal_tolerance = float(
+            self.get_parameter('same_goal_tolerance').value
+        )
 
-		self.centroids: List[Tuple[float, float]] = []
-		self.entropy_values: List[float] = []
-		self.cluster_sizes: List[int] = []
+        map_qos = QoSProfile(
+            reliability=QoSReliabilityPolicy.RELIABLE,
+            durability=QoSDurabilityPolicy.TRANSIENT_LOCAL,
+            history=QoSHistoryPolicy.KEEP_LAST,
+            depth=1,
+        )
 
-		self.robot_x = 0.0
-		self.robot_y = 0.0
-		self.have_odom = False
+        self.create_subscription(
+            OccupancyGrid,
+            self.map_topic,
+            self._map_cb,
+            map_qos,
+        )
+        self.create_subscription(
+            Odometry,
+            self.odom_topic,
+            self._odom_cb,
+            10,
+        )
 
-		self.last_goal: Optional[Tuple[float, float]] = None
-		self.last_goal_score: Optional[float] = None
+        self.goal_pub = self.create_publisher(PoseStamped, self.goal_topic, 10)
+        self.timer = self.create_timer(self.decision_period, self._timer_cb)
 
-		self.create_subscription(
-			PoseArray,
-			self.frontier_centroids_topic,
-			self._centroids_cb,
-			10,
-		)
-		self.create_subscription(
-			Float32MultiArray,
-			self.frontier_entropy_topic,
-			self._entropy_cb,
-			10,
-		)
-		self.create_subscription(
-			Int32MultiArray,
-			self.frontier_cluster_sizes_topic,
-			self._sizes_cb,
-			10,
-		)
-		self.create_subscription(
-			Odometry,
-			self.odom_topic,
-			self._odom_cb,
-			10,
-		)
+        self.ogm: Optional[OccupancyGridManager] = None
+        self.robot_x = 0.0
+        self.robot_y = 0.0
+        self.have_odom = False
 
-		self.goal_pub = self.create_publisher(PoseStamped, self.goal_topic, 10)
-		self.timer = self.create_timer(self.decision_period, self._timer_cb)
+        self.last_goal: Optional[Tuple[float, float]] = None
+        self.last_goal_score: Optional[float] = None
 
-		self.get_logger().info('decision_maker started')
+        self.get_logger().info('decision_maker started (entropy_explorer-based)')
 
-	def _centroids_cb(self, msg: PoseArray) -> None:
-		self.centroids = [(p.position.x, p.position.y) for p in msg.poses]
+    def _map_cb(self, msg: OccupancyGrid) -> None:
+        self.ogm = OccupancyGridManager(msg)
 
-	def _entropy_cb(self, msg: Float32MultiArray) -> None:
-		self.entropy_values = [float(v) for v in msg.data]
+    def _odom_cb(self, msg: Odometry) -> None:
+        self.robot_x = msg.pose.pose.position.x
+        self.robot_y = msg.pose.pose.position.y
+        self.have_odom = True
 
-	def _sizes_cb(self, msg: Int32MultiArray) -> None:
-		self.cluster_sizes = [int(v) for v in msg.data]
+    def _timer_cb(self) -> None:
+        if self.ogm is None or not self.have_odom:
+            return
 
-	def _odom_cb(self, msg: Odometry) -> None:
-		pos = msg.pose.pose.position
-		self.robot_x = pos.x
-		self.robot_y = pos.y
-		self.have_odom = True
+        frontiers = detect_frontiers(self.ogm)
+        if not frontiers:
+            return
 
-	def _timer_cb(self) -> None:
-		if not self.have_odom:
-			return
-		if not self.centroids:
-			return
+        candidates = self._score_candidates(frontiers)
+        if not candidates:
+            return
 
-		raw_values = self._select_raw_values()
-		if not raw_values:
-			return
+        best = max(candidates, key=lambda c: c.score)
+        chosen = self._apply_hysteresis(candidates, best)
 
-		values = self._align_values(raw_values)
-		if not values:
-			return
+        if self.last_goal is not None:
+            delta = math.hypot(
+                chosen.x - self.last_goal[0],
+                chosen.y - self.last_goal[1],
+            )
+            if delta < self.same_goal_tolerance:
+                return
 
-		candidates = self._build_candidates(values)
-		if not candidates:
-			return
+        self._publish_goal(chosen.x, chosen.y)
+        self.last_goal = (chosen.x, chosen.y)
+        self.last_goal_score = chosen.score
 
-		for c in candidates:
-			c.score = self._score(c)
+        self.get_logger().info(
+            'goal=('
+            f'{chosen.x:.2f}, {chosen.y:.2f}) '
+            f'entropy_norm={chosen.entropy_norm:.3f} '
+            f'dr={chosen.dist_robot_norm:.3f} '
+            f'dp={chosen.dist_prev_norm:.3f} '
+            f'score={chosen.score:.3f}'
+        )
 
-		best = max(candidates, key=lambda c: c.score)
-		chosen = self._apply_hysteresis(candidates, best)
+    def _score_candidates(self, frontiers) -> List[FrontierCandidate]:
+        raw = []
+        for fr in frontiers:
+            info_gain = self.ogm.information_gain_at(fr.centroid_col, fr.centroid_row)
+            dist_robot = math.hypot(fr.centroid_x - self.robot_x, fr.centroid_y - self.robot_y)
+            dist_prev = 0.0
+            if self.last_goal is not None:
+                dist_prev = math.hypot(
+                    fr.centroid_x - self.last_goal[0],
+                    fr.centroid_y - self.last_goal[1],
+                )
+            raw.append((fr.centroid_x, fr.centroid_y, info_gain, dist_robot, dist_prev))
 
-		# Avoid republishing almost the same goal point.
-		if self.last_goal is not None:
-			delta = math.hypot(
-				chosen.x - self.last_goal[0],
-				chosen.y - self.last_goal[1],
-			)
-			if delta < self.same_goal_tolerance:
-				return
+        max_entropy = max(item[2] for item in raw) or 1.0
+        max_dr = max(item[3] for item in raw) or 1.0
+        max_dp = max(item[4] for item in raw) or 1.0
 
-		self._publish_goal(chosen.x, chosen.y)
-		self.last_goal = (chosen.x, chosen.y)
-		self.last_goal_score = chosen.score
+        candidates: List[FrontierCandidate] = []
+        for x, y, ent, dr, dp in raw:
+            ent_n = ent / max_entropy
+            dr_n = dr / max_dr
+            dp_n = dp / max_dp if self.last_goal is not None else 0.0
+            score = (
+                self.entropy_weight * ent_n
+                - self.distance_weight * dr_n
+                - self.consistency_weight * dp_n
+            )
+            candidates.append(
+                FrontierCandidate(
+                    x=x,
+                    y=y,
+                    entropy_norm=ent_n,
+                    dist_robot_norm=dr_n,
+                    dist_prev_norm=dp_n,
+                    score=score,
+                )
+            )
 
-		self.get_logger().info(
-			f'chosen cluster={chosen.index} '
-			f'goal=({chosen.x:.2f}, {chosen.y:.2f}) '
-			f'entropy_norm={chosen.entropy_norm:.3f} '
-			f'score={chosen.score:.3f}'
-		)
+        return candidates
 
-	def _select_raw_values(self) -> List[float]:
-		if self.entropy_values:
-			return [float(v) for v in self.entropy_values]
-		if self.cluster_sizes:
-			return [float(v) for v in self.cluster_sizes]
-		return []
+    def _apply_hysteresis(
+        self,
+        candidates: Sequence[FrontierCandidate],
+        best: FrontierCandidate,
+    ) -> FrontierCandidate:
+        if self.last_goal is None:
+            return best
 
-	def _align_values(self, raw_values: Sequence[float]) -> List[float]:
-		n = min(len(self.centroids), len(raw_values))
-		if n == 0:
-			return []
-		if len(self.centroids) != len(raw_values):
-			self.get_logger().warn(
-				'centroids and scores have different sizes; using overlap only'
-			)
-		return [float(raw_values[i]) for i in range(n)]
+        previous = min(
+            candidates,
+            key=lambda c: math.hypot(c.x - self.last_goal[0], c.y - self.last_goal[1]),
+        )
+        if best.score - previous.score <= self.switch_margin:
+            return previous
+        return best
 
-	def _build_candidates(self, values: Sequence[float]) -> List[FrontierCandidate]:
-		max_value = max(values)
-		if max_value <= 0.0:
-			max_value = 1.0
-
-		candidates: List[FrontierCandidate] = []
-		for i, (x, y) in enumerate(self.centroids[: len(values)]):
-			norm = values[i] / max_value
-			candidates.append(
-				FrontierCandidate(index=i, x=x, y=y, entropy_norm=norm)
-			)
-		return candidates
-
-	def _score(self, c: FrontierCandidate) -> float:
-		dist_robot = math.hypot(c.x - self.robot_x, c.y - self.robot_y)
-
-		dist_prev = 0.0
-		if self.last_goal is not None:
-			dist_prev = math.hypot(c.x - self.last_goal[0], c.y - self.last_goal[1])
-
-		return (
-			self.entropy_weight * c.entropy_norm
-			- self.distance_weight * dist_robot
-			- self.consistency_weight * dist_prev
-		)
-
-	def _apply_hysteresis(
-		self,
-		candidates: Sequence[FrontierCandidate],
-		best: FrontierCandidate,
-	) -> FrontierCandidate:
-		if self.last_goal is None:
-			return best
-
-		previous = self._closest_to_last_goal(candidates)
-		if previous is None:
-			return best
-
-		improvement = best.score - previous.score
-		if improvement <= self.switch_margin:
-			return previous
-		return best
-
-	def _closest_to_last_goal(
-		self,
-		candidates: Sequence[FrontierCandidate],
-	) -> Optional[FrontierCandidate]:
-		if self.last_goal is None:
-			return None
-
-		nearest: Optional[FrontierCandidate] = None
-		nearest_dist = float('inf')
-		for c in candidates:
-			d = math.hypot(c.x - self.last_goal[0], c.y - self.last_goal[1])
-			if d < nearest_dist:
-				nearest = c
-				nearest_dist = d
-		return nearest
-
-	def _publish_goal(self, x: float, y: float) -> None:
-		msg = PoseStamped()
-		msg.header.stamp = self.get_clock().now().to_msg()
-		msg.header.frame_id = self.goal_frame
-		msg.pose.position = Point(x=x, y=y, z=0.0)
-		msg.pose.orientation = Quaternion(x=0.0, y=0.0, z=0.0, w=1.0)
-		self.goal_pub.publish(msg)
+    def _publish_goal(self, x: float, y: float) -> None:
+        msg = PoseStamped()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id = self.goal_frame
+        msg.pose.position = Point(x=x, y=y, z=0.0)
+        msg.pose.orientation = Quaternion(x=0.0, y=0.0, z=0.0, w=1.0)
+        self.goal_pub.publish(msg)
 
 
 def main(args: Optional[Sequence[str]] = None) -> None:
-	rclpy.init(args=args)
-	node = DecisionMaker()
-	try:
-		rclpy.spin(node)
-	except KeyboardInterrupt:
-		pass
-	finally:
-		node.destroy_node()
-		rclpy.shutdown()
+    rclpy.init(args=args)
+    node = DecisionMaker()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
 
 
 if __name__ == '__main__':
-	main()
+    main()
