@@ -1,7 +1,7 @@
 """
 entropy_exploration.launch.py
 ─────────────────────────────
-Launch file for TurtleBot4 Entropy Explorer.
+Launch file for YALO TurtleBot4 Entropy Explorer.
 
 Starts:
   1. slam_toolbox  (async SLAM — builds the /map)
@@ -17,9 +17,12 @@ Optional arguments:
   nav2_params_file:=<path>
 """
 
+import os
+
+from ament_index_python import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import (
-    DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
+    DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription, TimerAction
 )
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -30,7 +33,25 @@ from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
 
+home = os.path.expanduser('~')
+map_yaml_path = os.path.join(home, 'ros2_ws/src/yalo/resource/map.yaml') 
+
 def generate_launch_description():
+
+    # --- Package share directories & file paths ---
+    pkg = get_package_share_directory('yalo')
+    rviz = os.path.join(pkg, 'rviz', 'exploration.rviz')
+    # slam_share = get_package_share_directory('slam_toolbox')
+    # nav2_share = get_package_share_directory('nav2_bringup')
+
+    # ── Config file paths ──────────────────────────────────────────────────
+    slam_yaml = os.path.join(pkg, 'config', 'slam_toolbox_params.yaml')
+    nav2_yaml = os.path.join(pkg, 'config', 'nav2_params.yaml')
+
+    if not os.path.isfile(slam_yaml):
+        print(f'\n[WARN] Missing: {slam_yaml}\n       Using slam_toolbox defaults.\n')
+    if not os.path.isfile(nav2_yaml):
+        print(f'\n[WARN] Missing: {nav2_yaml}\n       Using nav2_bringup defaults.\n')
 
     # ── Arguments ──────────────────────────────────────────────────────────
     use_sim_time_arg = DeclareLaunchArgument(
@@ -39,18 +60,16 @@ def generate_launch_description():
     )
     slam_params_arg = DeclareLaunchArgument(
         'slam_params_file',
-        default_value=PathJoinSubstitution([
-            FindPackageShare('turtlebot4_entropy_explorer'),
-            'config', 'slam_toolbox_params.yaml'
-        ]),
+        default_value=slam_yaml,
         description='SLAM Toolbox parameters file'
     )
     nav2_params_arg = DeclareLaunchArgument(
         'nav2_params_file',
-        default_value=PathJoinSubstitution([
-            FindPackageShare('turtlebot4_entropy_explorer'),
-            'config', 'nav2_params.yaml'
-        ]),
+        default_value=nav2_yaml,
+        # ([
+        #     FindPackageShare('yalo'),
+        #     'config', 'nav2_params.yaml'
+        # ])
         description='Nav2 navigation parameters file'
     )
 
@@ -92,7 +111,7 @@ def generate_launch_description():
         period=8.0,   # seconds — allow SLAM & Nav2 to come up
         actions=[
             Node(
-                package    = 'turtlebot4_entropy_explorer',
+                package    = 'yalo',
                 executable = 'entropy_explorer',
                 name       = 'entropy_explorer',
                 output     = 'screen',
@@ -122,4 +141,9 @@ def generate_launch_description():
         slam_launch,
         nav2_launch,
         entropy_node,
+        # RViz for visualization
+        ExecuteProcess(
+            cmd=['rviz2', '-d', rviz],
+            output='screen'
+        )
     ])
