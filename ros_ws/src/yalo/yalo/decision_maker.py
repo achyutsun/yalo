@@ -57,6 +57,7 @@ class DecisionMaker(Node):
         self.declare_parameter('startup_tax', 0.35)
         self.declare_parameter('start_velocity_threshold', 0.05)
         self.declare_parameter('stop_distance_threshold', 0.25)
+        self.declare_parameter('min_forward_cosine', 0.0)
 
         self.map_topic = self.get_parameter('map_topic').value
         self.odom_topic = self.get_parameter('odom_topic').value
@@ -82,6 +83,9 @@ class DecisionMaker(Node):
         )
         self.stop_distance_threshold = float(
             self.get_parameter('stop_distance_threshold').value
+        )
+        self.min_forward_cosine = float(
+            self.get_parameter('min_forward_cosine').value
         )
 
         map_qos = QoSProfile(
@@ -188,7 +192,13 @@ class DecisionMaker(Node):
                 fr.centroid_y - self.robot_y,
                 fr.centroid_x - self.robot_x,
             )
-            heading_error = abs(self._wrap_angle(heading_to_goal - self.robot_yaw))
+            heading_delta = self._wrap_angle(heading_to_goal - self.robot_yaw)
+            heading_error = abs(heading_delta)
+
+            # Exclude centroid goals behind the robot (cos(delta) <= 0 by default).
+            if math.cos(heading_delta) <= self.min_forward_cosine:
+                continue
+
             motion_cost = (
                 self.base_drain
                 + self.linear_cost_weight * dist_robot
@@ -215,6 +225,9 @@ class DecisionMaker(Node):
                     dist_prev,
                 )
             )
+
+        if not raw:
+            return []
 
         max_entropy = max(item[2] for item in raw) or 1.0
         max_motion = max(item[3] for item in raw) or 1.0
