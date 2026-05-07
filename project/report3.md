@@ -148,9 +148,9 @@ $$
 
 Where:
 
-- $x_r, y_r$ = robot position
-- $x_g, y_g$ = goal position
-- $\theta$ = goal yaw angle
+- x<sub>r</sub>, y<sub>r</sub> = robot position  
+- x<sub>g</sub>, y<sub>g</sub> = goal position  
+- θ = goal yaw angle
 
 The yaw is converted into quaternion form:
 
