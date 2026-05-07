@@ -86,60 +86,49 @@ Overview of frontier-based exploration and BFS clustering.
 
 Topics to include:
 
-\[
-\textbf{Centroid Calculation for a Frontier Cluster}
-\]
+Frontier Cluster Centroid Calculation
 
 Given a frontier cluster containing \(N\) frontier cells:
 
-\[
+$$
 \{(x_1, y_1), (x_2, y_2), \dots, (x_N, y_N)\}
-\]
+$$
 
 the centroid position is computed as the arithmetic mean of all frontier cell coordinates.
 
-\vspace{0.5em}
+Centroid Equations
 
-\[
+$$
 x_c = \frac{1}{N} \sum_{i=1}^{N} x_i
-\]
+$$
 
-\[
+$$
 y_c = \frac{1}{N} \sum_{i=1}^{N} y_i
-\]
+$$
 
 where:
 
-\[
+$$
 (x_c, y_c)
-\]
+$$
 
 is the centroid position of the frontier cluster.
 
-\vspace{1em}
+Expanded Form
 
-\[
-\textbf{Expanded Form}
-\]
-
-\[
+$$
 x_c = \frac{x_1 + x_2 + \cdots + x_N}{N}
-\]
+$$
 
-\[
+$$
 y_c = \frac{y_1 + y_2 + \cdots + y_N}{N}
-\]
+$$
 
-\vspace{1em}
-
-\[
-\textbf{Robot Exploration Usage}
-\]
+Exploration Usage
 
 The centroid represents the geometric center of a frontier cluster and is used as the navigation target for autonomous exploration.
 
 Larger frontier clusters are typically prioritized because they correspond to larger unexplored regions.
-\]
 
 Goal Yaw Computation
 
