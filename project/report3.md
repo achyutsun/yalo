@@ -5,11 +5,11 @@ parent: Project
 nav_order: 3
 ---
 
-# Report 3: ZZ
+# Milestone 3: Yalo Mobile Robot
 
 {: .no_toc }
 
-This page demonstrates the core capabilities of the Just the Docs theme, including navigation, mathematical typesetting, and technical diagrams.
+This report presents the final system design, evaluation, and analysis of the Yalo Mobile Robot project.
 
 ---
 
@@ -22,84 +22,197 @@ This page demonstrates the core capabilities of the Just the Docs theme, includi
 
 ---
 
-## 1. Mathematical Formulas
-The probability density function of a Gaussian distribution is defined as:
+## 1. Project Overview
 
-$$p(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}$$
 
-Where:
-- $$\mu$$ is the mean (peak location).
-- $$\sigma$$ is the standard deviation (width of the "bell").
+Topics to include:
 
----
-
-## 2. Code Implementation
-
-Below is a snippet of the Python code used to process the assignment data.
-
-```python
-import numpy as np
-
-def calculate_velocity(displacement, time):
-    """Calculates average velocity."""
-    return np.divide(displacement, time)
-
-print(f"Result: {calculate_velocity(100, 20)} m/s")
-
-```
+- Project motivation
+- Exploration objectives
+- Autonomous navigation goals
+- System capabilities
+- Final mission summary
 
 ---
 
-## 3. Section & Sub-sections
+## 2. Graphical Abstract
 
-The sidebar will automatically highlight the section you are currently viewing.
 
-### 3.1 Observations
 
-* Observation A: The system remained stable under load.
-* Observation B: Latency increased during the second trial.
 
-### 3.2 Conclusion
-
-The experiment met all primary objectives. Future work should focus on optimizing the data pipeline.
 
 ---
 
-## 4. Media
+## 3. System Architecture
 
-You can include images by placing them in the `assets/images/` folder.
+Overview of the complete robot software and hardware pipeline.
 
-![Alt text](../assets/images/logo.png){: width="500" }
+Topics to include:
 
-*Figure 1: Class Logo*
+
+
+---
+
+## 4. Algorithm
+
+Description of the core algorithms used in the project.
+
+### 4.1 Robot Kinematics
+
+Basic robot motion model and control equations.
+
+$$
+\mathbf{x} =
+\begin{bmatrix}
+x \\
+y \\
+\theta
+\end{bmatrix}
+$$
+
+$$
+\mathbf{u} =
+\begin{bmatrix}
+v \\
+\omega
+\end{bmatrix}
+$$
 
 ---
 
-## 5. Submission Checklist
+### 4.2 Frontier Detection
 
-* [x] Complete Markdown documentation
-* [x] Verify LaTeX rendering
-* [x] Generate Mermaid flowchart
-* [ ] Peer review feedback
+Overview of frontier-based exploration and BFS clustering.
 
-# Markdown Features
+Topics to include:
 
-## Callouts
-> This is a note
-{: .note }
-
-> This is a warning
-{: .warning }
-
-## Buttons
-[Main Button](assignment1.html){: .btn .btn-primary }
-[Blue Button](assignment2.html){: .btn .btn-blue }
-[Blue Button](assignment3.html){: .btn .btn-red }
-
-## Tables
-
-| Header | Header |
-| :--- | :--- |
-| Cell | Cell |
 
 ---
+
+### 4.3 Entropy Exploration
+
+Overview of entropy-based frontier scoring.
+
+Topics to include:
+
+
+Example equation:
+
+---
+
+### 4.4 Decision Making
+
+Description of how the robot selects navigation goals.
+
+Topics to include:
+
+
+
+---
+
+## 5. Benchmarking & Results
+
+Evaluation of system performance during final mission execution.
+
+### 5.1 Accuracy
+
+Topics to include:
+
+
+
+![Alt text](../assets/images/accuracy_plot.png)
+
+*Figure: Example accuracy evaluation plot.*
+
+---
+
+### 5.2 Error Analysis
+
+Topics to include:
+
+
+
+Example equation:
+
+
+---
+
+### 5.3 Success Rate
+
+Performance evaluation across multiple trials.
+
+| Trial | Result | Notes |
+|------|------|------|
+| 1 | TBD | TBD |
+| 2 | TBD | TBD |
+| 3 | TBD | TBD |
+| 4 | TBD | TBD |
+| 5 | TBD | TBD |
+
+---
+
+### 5.4 Final Mission Video
+
+Link to the final demonstration video.
+
+---
+
+## 6. Ethical Impact Statement
+
+Discussion of ethical considerations related to the robot system.
+
+Topics to include:
+
+
+---
+
+## 7. Custom Module Code Links
+
+## 7. Custom Module Code Links
+
+Links to the major custom modules and key commits used in the project.
+
+| Team Member | Role | Key Git Commit/PR | Specific File(s) Authorship |
+|-------------|------|-------------------|-----------------------------|
+| Long | Frontier Detection | [Commit `a645456`](https://github.com/YOUR-REPO/commit/a645456) | `frontier_detector.py`, `frontier_utils.py`, `frontier.rviz` |
+| Yibo | Decision Making | [Commit `cc44e18`](https://github.com/YOUR-REPO/commit/cc44e18) | `decision_maker.py`, `frontier_detector.py` |
+| Achyut | Entropy Exploration | [Commit `defd9b7`](https://github.com/YOUR-REPO/commit/defd9b7) | `entropy_explorer.py` |
+
+
+---
+
+## 8. Experimental Analysis
+
+Discussion of experimental observations and validation.
+
+Topics to include:
+
+- Runtime issues
+- Sensor stability
+- Mapping performance
+- Navigation consistency
+- Environmental challenges
+
+---
+
+## 9. Project Management
+
+Project organization and contribution summary.
+
+Topics to include:
+
+- Team responsibilities
+- GitHub workflow
+- Instructor feedback integration
+- Development timeline
+
+---
+
+## 10. References
+
+
+
+---
+
+## 11. Submission Checklist
+
