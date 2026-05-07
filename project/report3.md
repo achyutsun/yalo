@@ -86,6 +86,100 @@ Overview of frontier-based exploration and BFS clustering.
 
 Topics to include:
 
+\[
+\textbf{Centroid Calculation for a Frontier Cluster}
+\]
+
+Given a frontier cluster containing \(N\) frontier cells:
+
+\[
+\{(x_1, y_1), (x_2, y_2), \dots, (x_N, y_N)\}
+\]
+
+the centroid position is computed as the arithmetic mean of all frontier cell coordinates.
+
+\vspace{0.5em}
+
+\[
+x_c = \frac{1}{N} \sum_{i=1}^{N} x_i
+\]
+
+\[
+y_c = \frac{1}{N} \sum_{i=1}^{N} y_i
+\]
+
+where:
+
+\[
+(x_c, y_c)
+\]
+
+is the centroid position of the frontier cluster.
+
+\vspace{1em}
+
+\[
+\textbf{Expanded Form}
+\]
+
+\[
+x_c = \frac{x_1 + x_2 + \cdots + x_N}{N}
+\]
+
+\[
+y_c = \frac{y_1 + y_2 + \cdots + y_N}{N}
+\]
+
+\vspace{1em}
+
+\[
+\textbf{Robot Exploration Usage}
+\]
+
+The centroid represents the geometric center of a frontier cluster and is used as the navigation target for autonomous exploration.
+
+Larger frontier clusters are typically prioritized because they correspond to larger unexplored regions.
+\]
+
+Goal Yaw Computation
+
+The robot computes the yaw angle so it faces the selected frontier centroid.
+
+$$
+\Delta x = x_g - x_r
+$$
+
+$$
+\Delta y = y_g - y_r
+$$
+
+$$
+\theta = \operatorname{atan2}(y_g - y_r,\ x_g - x_r)
+$$
+
+Where:
+
+- $x_r, y_r$ = robot position
+- $x_g, y_g$ = goal position
+- $\theta$ = goal yaw angle
+
+The yaw is converted into quaternion form:
+
+$$
+q_z = \sin\left(\frac{\theta}{2}\right)
+$$
+
+$$
+q_w = \cos\left(\frac{\theta}{2}\right)
+$$
+
+Final quaternion:
+
+$$
+(q_x,\ q_y,\ q_z,\ q_w)
+=
+(0,\ 0,\ \sin(\theta/2),\ \cos(\theta/2))
+$$
 
 ---
 
@@ -105,8 +199,6 @@ Example equation:
 Description of how the robot selects navigation goals.
 
 Topics to include:
-
-
 
 ---
 
