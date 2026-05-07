@@ -120,8 +120,6 @@ Topics to include:
 
 
 
-![Alt text](../assets/images/accuracy_plot.png)
-
 *Figure: Example accuracy evaluation plot.*
 
 ---
