@@ -240,7 +240,7 @@ Performance evaluation across multiple trials.
 
 ### 5.4 Final Mission Video
 
-Link to the final demonstration video.
+https://youtu.be/D1sxXO-z0Kw
 
 ---
 
