@@ -143,7 +143,7 @@ $$
 $$
 
 $$
-\theta = \operatorname{atan2}(y_g - y_r,\ x_g - x_r)
+\theta = \text{atan2}(y_g - y_r,\ x_g - x_r)
 $$
 
 Where:
