@@ -8,7 +8,7 @@ nav_order: 3
 # Milestone 3: Yalo Mobile Robot      
 
 Team members: Yibo @JerrySyameimaru, Achyut @achyutsun, Long @lhtruong26   
-###<https://www.yalo.space>
+<https://www.yalo.space>
 
 Arizona State University RAS-598 Mobile Robotics Class  Spring, 2026
 
@@ -462,7 +462,7 @@ MIT Press, Cambridge, MA.
 
 ---
 
-**[10]** Yamauchi, B. (1997).
+**[7]** Yamauchi, B. (1997).
 **A Frontier-Based Approach for Autonomous Exploration.**
 In: *Proceedings of the IEEE International Symposium on Computational Intelligence in Robotics and Automation (CIRA)*, pp. 146–151.
 *Landmark paper introducing frontier-based exploration.*
