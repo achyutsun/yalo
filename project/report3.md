@@ -191,9 +191,9 @@ $$
 Overview of entropy-based frontier scoring.
 Yalo Mobile robot uses an entropy-maximising frontier exploration algorithm deployed on the TurtleBot4 mobile platform under ROS 2 Jazzy. The method assigns each candidate frontier an information-gain score derived from Shannon occupancy-grid entropy and selects navigation goals that maximally reduce map uncertainty. A composite ranking function balances exploration drive, path cost, and goal proximity, recovering weighted A* and pure entropy-greedy search as special cases. The algorithm runs as a single ROS 2 lifecycle node, subscribing to /map and /odom and publishing Nav2 goals.
 
-  ## 2. Mathematical Foundation
+  #### 4.3.1. Mathematical Foundation
 
-  ### 2.1 Cell Entropy
+  ##### 4.3.1.1 Cell Entropy
 
   Each cell in the 2-D occupancy grid stores a probability `p ∈ [0, 1]` representing the likelihood of occupancy. The binary Shannon entropy of a single cell is:
 
@@ -205,7 +205,7 @@ H(cell) = −p · log₂(p) − (1−p) · log₂(1−p)
 
 > **Figure 1** — Binary entropy H(cell) vs occupancy probability p.
 
-  ### 2.2 Information Gain of a Frontier
+  ##### 4.3.1.2 Information Gain of a Frontier
 
   Given a candidate frontier `f` with associated viewpoint `v`, the sensor footprint `Ω(v)` is the set of grid cells within the RPLIDAR-A1 maximum range `r_sensor` centred on `v`. The expected information gain is approximated by summing cell entropy over this disc:
 
@@ -218,13 +218,13 @@ H(cell) = −p · log₂(p) − (1−p) · log₂(1−p)
   > **Figure 2** — Occupancy grid (left) and entropy map with frontier selection (right). The frontier band is highlighted in deep purple; the orange disc shows the sensor footprint Ω(v) at the selected viewpoint.
   IG(f) = Σ_{c ∈ Ω(v)}  H(c)           (raw entropy integration)
 
-  ## 2. System Architecture
+  #### 4.3.2. System Architecture
 
   The algorithm runs as a single **ROS 2 Jazzy lifecycle node** on the TurtleBot4's Raspberry Pi 4B. It subscribes to the Nav2 costmap (`/map`) and odometry (`/odom`), and publishes navigation goals via the Nav2 action server. Figure 3 illustrates the control loop.
 
   > **Figure 3** — EEA control loop (TurtleBot4 / ROS 2 Jazzy).
 
-  ## 3. Parameters and Tuning
+  #### 4.3.3. Parameters and Tuning
 
   | Parameter | Symbol | Default | Effect |
   |---|---|---|---|
@@ -235,7 +235,7 @@ H(cell) = −p · log₂(p) − (1−p) · log₂(1−p)
   | Min frontier size | — | 5 cells | Filters noise clusters |
 
 
-  ## 4. What we did
+  #### 4.3.4 What we did
 
   We described an entropy-maximising frontier exploration algorithm for the TurtleBot4. By grounding frontier selection in Shannon information theory, the approach provides a principled, interpretable criterion for navigation goal selection. The composite scoring function unifies entropy-greedy and cost-aware strategies through tunable weights, and the implementation integrates directly with the ROS 2 Nav2 stack. Future work will extend the sensor model to account for angular resolution and occlusion, and evaluate coverage completeness against nearest-frontier and random baselines on physical hardware.
 
