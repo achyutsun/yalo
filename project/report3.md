@@ -47,7 +47,9 @@ Topics to include:
 
 Overview of the complete robot software and hardware pipeline.
 
-Topics to include:
+RQT graph
+
+![Alt text](../assets/images/rosgraph.png)
 
 
 
