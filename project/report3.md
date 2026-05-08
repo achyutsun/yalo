@@ -5,7 +5,7 @@ parent: Project
 nav_order: 3
 ---
 
-# Milestone 3: Yalo Mobile Robot      www.yalo.space
+# Milestone 3: Yalo Mobile Robot      <https://www.yalo.space>
 
 Team members: Yibo @JerrySyameimaru, Achyut @achyutsun, Long @lhtruong26
 
