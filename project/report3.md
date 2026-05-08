@@ -400,26 +400,11 @@ Discussion of experimental observations and validation.
 
 ---
 
-## 9. Project Management
-
-Project organization and contribution summary.
-
-Topics to include:
-
-- Team responsibilities
-- GitHub workflow
-- Instructor feedback integration
-- Development timeline
-
----
-
-## 10. References
+## 9. References
 1. Yamauchi, B. (1997). A frontier-based approach for autonomous exploration. *CIRA 1997*, 146–151.
 2. Shannon, C. E. (1948). A mathematical theory of communication. *Bell System Technical Journal*, 27, 379–423.
 3. Open Navigation LLC. (2024). Nav2 — ROS 2 Navigation Framework. <https://nav2.org>
 
 
 ---
-
-## 11. Submission Checklist
 
