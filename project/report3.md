@@ -5,11 +5,11 @@ parent: Project
 nav_order: 3
 ---
 
-# Report 3: ZZ
+# Milestone 3: Yalo Mobile Robot
 
 {: .no_toc }
 
-This page demonstrates the core capabilities of the Just the Docs theme, including navigation, mathematical typesetting, and technical diagrams.
+This report presents the final system design, evaluation, and analysis of the Yalo Mobile Robot project.
 
 ---
 
@@ -22,84 +22,284 @@ This page demonstrates the core capabilities of the Just the Docs theme, includi
 
 ---
 
-## 1. Mathematical Formulas
-The probability density function of a Gaussian distribution is defined as:
+## 1. Project Overview
 
-$$p(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}$$
+
+Topics to include:
+
+- Project motivation
+- Exploration objectives
+- Autonomous navigation goals
+- System capabilities
+- Final mission summary
+
+---
+
+## 2. Graphical Abstract
+
+
+
+
+
+---
+
+## 3. System Architecture
+
+Overview of the complete robot software and hardware pipeline.
+
+Topics to include:
+
+
+
+---
+
+## 4. Algorithm
+
+Description of the core algorithms used in the project.
+
+### 4.1 Robot Kinematics
+
+Basic robot motion model and control equations.
+
+$$
+\mathbf{x} =
+\begin{bmatrix}
+x \\
+y \\
+\theta
+\end{bmatrix}
+$$
+
+$$
+\mathbf{u} =
+\begin{bmatrix}
+v \\
+\omega
+\end{bmatrix}
+$$
+
+---
+
+### 4.2 Frontier Detection
+
+Overview of frontier-based exploration and BFS clustering.
+
+Topics to include:
+
+Frontier Cluster Centroid Calculation
+
+Given a frontier cluster containing \(N\) frontier cells:
+
+$$
+\{(x_1, y_1), (x_2, y_2), \dots, (x_N, y_N)\}
+$$
+
+the centroid position is computed as the arithmetic mean of all frontier cell coordinates.
+
+Centroid Equations
+
+$$
+x_c = \frac{1}{N} \sum_{i=1}^{N} x_i
+$$
+
+$$
+y_c = \frac{1}{N} \sum_{i=1}^{N} y_i
+$$
+
+where:
+
+$$
+(x_c, y_c)
+$$
+
+is the centroid position of the frontier cluster.
+
+Expanded Form
+
+$$
+x_c = \frac{x_1 + x_2 + \cdots + x_N}{N}
+$$
+
+$$
+y_c = \frac{y_1 + y_2 + \cdots + y_N}{N}
+$$
+
+Exploration Usage
+
+The centroid represents the geometric center of a frontier cluster and is used as the navigation target for autonomous exploration.
+
+Larger frontier clusters are typically prioritized because they correspond to larger unexplored regions.
+
+Goal Yaw Computation
+
+The robot computes the yaw angle so it faces the selected frontier centroid.
+
+$$
+\Delta x = x_g - x_r
+$$
+
+$$
+\Delta y = y_g - y_r
+$$
+
+$$
+\theta = \text{atan2}(y_g - y_r,\ x_g - x_r)
+$$
 
 Where:
-- $$\mu$$ is the mean (peak location).
-- $$\sigma$$ is the standard deviation (width of the "bell").
+
+$$
+x_r,\ y_r = \text{robot position}
+$$
+
+$$
+x_g,\ y_g = \text{goal position}
+$$
+
+$$
+\theta = \text{goal yaw angle}
+$$
+
+The yaw is converted into quaternion form:
+
+$$
+q_z = \sin\left(\frac{\theta}{2}\right)
+$$
+
+$$
+q_w = \cos\left(\frac{\theta}{2}\right)
+$$
+
+Final quaternion:
+
+$$
+(q_x, q_y, q_z, q_w)
+=
+(0, 0, \sin(\theta/2), \cos(\theta/2))
+$$
 
 ---
 
-## 2. Code Implementation
+### 4.3 Entropy Exploration
 
-Below is a snippet of the Python code used to process the assignment data.
+Overview of entropy-based frontier scoring.
 
-```python
-import numpy as np
+Topics to include:
 
-def calculate_velocity(displacement, time):
-    """Calculates average velocity."""
-    return np.divide(displacement, time)
 
-print(f"Result: {calculate_velocity(100, 20)} m/s")
-
-```
+Example equation:
 
 ---
 
-## 3. Section & Sub-sections
+### 4.4 Decision Making
 
-The sidebar will automatically highlight the section you are currently viewing.
+Description of how the robot selects navigation goals.
 
-### 3.1 Observations
-
-* Observation A: The system remained stable under load.
-* Observation B: Latency increased during the second trial.
-
-### 3.2 Conclusion
-
-The experiment met all primary objectives. Future work should focus on optimizing the data pipeline.
+Topics to include:
 
 ---
 
-## 4. Media
+## 5. Benchmarking & Results
 
-You can include images by placing them in the `assets/images/` folder.
+Evaluation of system performance during final mission execution.
 
-![Alt text](../assets/images/logo.png){: width="500" }
+### 5.1 Accuracy
 
-*Figure 1: Class Logo*
+Topics to include:
+
+
+
+*Figure: Example accuracy evaluation plot.*
+
+---
+
+### 5.2 Error Analysis
+
+Topics to include:
+
+
+
+Example equation:
+
 
 ---
 
-## 5. Submission Checklist
+### 5.3 Success Rate
 
-* [x] Complete Markdown documentation
-* [x] Verify LaTeX rendering
-* [x] Generate Mermaid flowchart
-* [ ] Peer review feedback
+Performance evaluation across multiple trials.
 
-# Markdown Features
-
-## Callouts
-> This is a note
-{: .note }
-
-> This is a warning
-{: .warning }
-
-## Buttons
-[Main Button](assignment1.html){: .btn .btn-primary }
-[Blue Button](assignment2.html){: .btn .btn-blue }
-[Blue Button](assignment3.html){: .btn .btn-red }
-
-## Tables
-
-| Header | Header |
-| :--- | :--- |
-| Cell | Cell |
+| Trial | Result | Notes |
+|------|------|------|
+| 1 | TBD | TBD |
+| 2 | TBD | TBD |
+| 3 | TBD | TBD |
+| 4 | TBD | TBD |
+| 5 | TBD | TBD |
 
 ---
+
+### 5.4 Final Mission Video
+
+https://youtu.be/D1sxXO-z0Kw
+
+---
+
+## 6. Ethical Impact Statement
+
+Discussion of ethical considerations related to the robot system.
+
+Topics to include:
+
+
+---
+
+## 7. Custom Module Code Links
+
+## 7. Custom Module Code Links
+
+Links to the major custom modules and key commits used in the project.
+
+| Team Member | Role | Key Git Commit/PR | Specific File(s) Authorship |
+|-------------|------|-------------------|-----------------------------|
+| Long | Frontier Detection | [Commit `a645456`](https://github.com/YOUR-REPO/commit/a645456) | `frontier_detector.py`, `frontier_utils.py`, `frontier.rviz` |
+| Yibo | Decision Making | [Commit `cc44e18`](https://github.com/YOUR-REPO/commit/cc44e18) | `decision_maker.py`, `frontier_detector.py` |
+| Achyut | Entropy Exploration | [Commit `defd9b7`](https://github.com/YOUR-REPO/commit/defd9b7) | `entropy_explorer.py` |
+
+
+---
+
+## 8. Experimental Analysis
+
+Discussion of experimental observations and validation.
+
+Topics to include:
+
+- Runtime issues
+- Sensor stability
+- Mapping performance
+- Navigation consistency
+- Environmental challenges
+
+---
+
+## 9. Project Management
+
+Project organization and contribution summary.
+
+Topics to include:
+
+- Team responsibilities
+- GitHub workflow
+- Instructor feedback integration
+- Development timeline
+
+---
+
+## 10. References
+
+
+
+---
+
+## 11. Submission Checklist
+

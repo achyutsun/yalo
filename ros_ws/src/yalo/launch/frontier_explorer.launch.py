@@ -27,7 +27,7 @@ def generate_launch_description():
             default_value='false',
         ),
         Node(
-            package='frontier_explorer',
+            package='yalo',
             executable='frontier_detector',
             name='frontier_detector',
             output='screen',
