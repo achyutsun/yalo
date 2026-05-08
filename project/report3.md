@@ -401,9 +401,12 @@ Discussion of experimental observations and validation.
 ---
 
 ## 9. References
-1. Yamauchi, B. (1997). A frontier-based approach for autonomous exploration. *CIRA 1997*, 146–151.
-2. Shannon, C. E. (1948). A mathematical theory of communication. *Bell System Technical Journal*, 27, 379–423.
-3. Open Navigation LLC. (2024). Nav2 — ROS 2 Navigation Framework. <https://nav2.org>
+**[1]** Thrun, S., Burgard, W., & Fox, D. (2005).
+**Probabilistic Robotics.**
+MIT Press, Cambridge, MA.
+*Foundational reference for occupancy grids, Bayesian filtering, SLAM, and entropy-based uncertainty estimation.*
+
+---
 
 
 ---
