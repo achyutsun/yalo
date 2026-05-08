@@ -370,9 +370,24 @@ https://youtu.be/D1sxXO-z0Kw
 
 ## 6. Ethical Impact Statement
 
-Discussion of ethical considerations related to the robot system.
 
-Topics to include:
+The Yalo project is a LiDAR-based frontier exploration system that detects unknown boundaries in an occupancy grid and converts them into navigation goals. Even in its current form, the project raises ethical concerns because data handling, motion control, and sensor interpretation directly affect safety, privacy, and fairness.
+
+Privacy risks are limited because the system mainly uses LiDAR, map, and odometry data instead of raw imagery. However, map and pose history can still reveal occupancy patterns and sensitive spatial behavior. If future versions add RGB cameras or richer logging, on-device processing or redaction should be used before storage or transmission. The ethical baseline should remain data minimization.
+
+Safety is the most immediate concern because the robot autonomously selects movement goals in physical environments. The robot should slow near uncertain frontiers, reduce speed when localization confidence drops, and stop safely if localization or map updates become unreliable. Slightly slower exploration is justified if it reduces collisions or injuries.
+
+Bias appears mainly as hardware bias. LiDAR performs inconsistently on glass, reflective surfaces, thin obstacles, and some environments, so the same robot may work well in one space and poorly in another. A fair design would acknowledge these limits and expose confidence estimates instead of assuming equal performance everywhere.
+
+**Utilitarian Test:**
+The project’s main benefit is efficient autonomous exploration for mapping and navigation. The main risks come from sensor blind spots, overconfident motion, and unnecessary data retention. The ethical design maximizes safe exploration while minimizing harm through conservative speed limits and fail-safe stopping.
+
+**Justice Test:**
+Because LiDAR performance depends on the environment, some users and spaces face greater risk than others. Future versions should document limitations and evaluate performance across different environments.
+
+**Virtue Test:**
+A responsible robotics team should avoid overstating LiDAR reliability and remain transparent about system limitations. The virtuous design is cautious, honest about uncertainty, and respectful of human spaces.
+
 
 
 ---
