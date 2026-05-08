@@ -223,7 +223,7 @@ H(cell) = −p · log₂(p) − (1−p) · log₂(1−p)
 
   The algorithm runs as a single **ROS 2 Jazzy lifecycle node** on the TurtleBot4's Raspberry Pi 4B. It subscribes to the Nav2 costmap (`/map`) and odometry (`/odom`), and publishes navigation goals via the Nav2 action server. Figure 3 illustrates the control loop.
 ![Alt text](../assets/images/yalo_figure3.png)
-  > **Figure 3** — EEA control loop (TurtleBot4 / ROS 2 Jazzy).
+  > **Figure 3** — Control loop (TurtleBot4 / ROS 2 Jazzy).
 
 #### 4.3.3. Parameters and Tuning
 
