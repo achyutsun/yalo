@@ -6,5 +6,4 @@ has_children: true
 ---
 
 # Yalo Project Reports
-[![Watch the video](https://youtube.com)](
-[Milestone 1] (https://achyutsun.github.io/yalo/project/report1.html)
+[![Watch the video]([https://youtube.com](https://youtu.be/D1sxXO-z0Kw))](
