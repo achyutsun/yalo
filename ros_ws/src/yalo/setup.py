@@ -32,11 +32,8 @@ setup(
             'yalo = yalo.yalo:main',
             'decision_maker = yalo.decision_maker:main',
             'frontier_detector = yalo.frontier_detector:main',
-<<<<<<< HEAD
             'navigation = yalo.navigation:main',
-=======
             'entropy_explorer = yalo.entropy_explorer:main',
->>>>>>> 8a4a00bdeabf15c290bfa399b7d59c3178fd9180
         ],
     },
 )
