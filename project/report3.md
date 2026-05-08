@@ -301,8 +301,8 @@ Links to the major custom modules and key commits used in the project.
 
 | Team Member | Role | Key Git Commit/PR | Specific File(s) Authorship |
 |-------------|------|-------------------|-----------------------------|
-| Long | Frontier Detection | [Commit `a645456`](https://github.com/YOUR-REPO/commit/a645456) | `frontier_detector.py`, `frontier_utils.py`, `frontier.rviz` |
-| Yibo | Decision Making | [Commit `cc44e18`](https://github.com/YOUR-REPO/commit/cc44e18) | `decision_maker.py`, `frontier_detector.py` |
+| Long | Frontier Detection | [Commit `3e16e52`](https://github.com/achyutsun/yalo/commit/3e16e5286a90064b700cd73995bb48dfda37b952), [Commit `dc94748`](https://github.com/achyutsun/yalo/commit/dc94748bc9f528b322d3067ee45ef9dc1222fc8b), [Commit `322e477f`](https://github.com/achyutsun/yalo/commit/22e477fca71f92b16618a68f7a42ac8a4d7c14eb)  | `frontier_detector.py`, `frontier_utils.py`, `navigation.py` |
+| Yibo | Decision Making | [Commit `cc44e18`](https://github.com/YOUR-REPO/commit/cc44e18) | `decision_maker.py` |
 | Achyut | Entropy Exploration | [Commit `defd9b7`](https://github.com/YOUR-REPO/commit/defd9b7) | `entropy_explorer.py` |
 
 
