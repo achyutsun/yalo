@@ -216,7 +216,7 @@ H(cell) = −p · log₂(p) − (1−p) · log₂(1−p)
   This is a tractable proxy for the true expected posterior entropy reduction. Cells already known (`H ≈ 0`) contribute negligibly; high-entropy unknown cells dominate the sum, steering the robot toward genuinely uncertain regions.
 ![Alt text](../assets/images/yalo_figure2.png)
   > **Figure 2** — Occupancy grid (left) and entropy map with frontier selection (right). The frontier band is highlighted in deep purple; the orange disc shows the sensor footprint Ω(v) at the selected viewpoint.
-  IG(f) = Σ_{c ∈ Ω(v)}  H(c)           (raw entropy integration)
+  
 
 #### 4.3.2. System Architecture
 
