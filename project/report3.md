@@ -462,10 +462,10 @@ MIT Press, Cambridge, MA.
 
 ---
 
-**[7]** Eustice, R., et al. (2006).
-**Exactly Sparse Delayed-State Filters for View-Based SLAM.**
-*IEEE Transactions on Robotics (T-RO)*, 22, 1100–1114.
-*Foundational active SLAM uncertainty modeling.*
+**[10]** Yamauchi, B. (1997).
+**A Frontier-Based Approach for Autonomous Exploration.**
+In: *Proceedings of the IEEE International Symposium on Computational Intelligence in Robotics and Automation (CIRA)*, pp. 146–151.
+*Landmark paper introducing frontier-based exploration.*
 
 ---
 
@@ -475,74 +475,3 @@ MIT Press, Cambridge, MA.
 *Early probabilistic environment modeling for exploration.*
 
 ---
-
-**[9]** Vallvé, J., et al. (2015).
-**Potential Information Fields for Mobile Robot Exploration.**
-*Robotics and Autonomous Systems*, 69, 68–79.
-*Introduces joint path-map entropy minimization for exploration planning.*
-
----
-
-**[10]** Yamauchi, B. (1997).
-**A Frontier-Based Approach for Autonomous Exploration.**
-In: *Proceedings of the IEEE International Symposium on Computational Intelligence in Robotics and Automation (CIRA)*, pp. 146–151.
-*Landmark paper introducing frontier-based exploration.*
-
----
-
-**[11]** Stachniss, C., Grisetti, G., & Burgard, W. (2005).
-**Information Gain-based Exploration Using Rao-Blackwellized Particle Filters.**
-In: *Robotics: Science and Systems (RSS)*.
-*Influential active SLAM exploration framework using expected information gain.*
-
----
-
-**[12]** Castellanos, J. A., et al. (2004).
-**Limits to the Consistency of EKF-based SLAM.**
-In: *IFAC Symposium on Intelligent Autonomous Vehicles*.
-*Important theoretical treatment of SLAM uncertainty propagation.*
-
----
-
-**[13]** Dai, A., et al. (2020).
-**Fast Frontier-Based Information-Driven Autonomous Exploration with an MAV.**
-In: *IEEE International Conference on Robotics and Automation (ICRA)*.
-*Efficient entropy-aware frontier exploration using octree occupancy maps.*
-
----
-
-**[14]** Deng, D., et al. (2020).
-**Frontier-Based Automatic-Differentiable Information Gain Measure for Robotic Exploration of Unknown 3D Environments.**
-In: *IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)*.
-*Introduces differentiable information gain optimisation for exploration.*
-
----
-
-**[15]** Ahmed, M. F., et al. (2023).
-**Entropy Based Multi-robot Active SLAM.**
-*arXiv preprint*, arXiv:2310.06160.
-*Multi-robot entropy-driven frontier coordination and exploration.*
-
----
-
-**[16]** Suresh, A., et al. (2024).
-**Robotic Exploration using Generalized Behavioral Entropy.**
-*arXiv preprint*, arXiv:2402.10161.
-*Extends Shannon entropy exploration toward behavioral uncertainty modeling.*
-
----
-
-**[17]** Macé, S., et al.
-**slam_toolbox — ROS 2 SLAM Toolbox.**
-Available at: <https://github.com/SteveMacenski/slam_toolbox>
-*Practical implementation of occupancy-grid SLAM and frontier exploration for mobile robots under ROS 2.*
-
----
-
-**[18]** Open Navigation LLC.
-**Nav2 — ROS 2 Navigation Framework.**
-Available at: <https://nav2.org>
-*Widely used ROS 2 navigation architecture integrating frontier exploration, costmaps, planners, and reactive control.*
-
----
-
