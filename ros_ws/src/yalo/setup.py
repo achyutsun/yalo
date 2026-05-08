@@ -30,6 +30,7 @@ setup(
             'yalo = yalo.yalo:main',
             'decision_maker = yalo.decision_maker:main',
             'frontier_detector = yalo.frontier_detector:main',
+            'navigation = yalo.navigation:main',
         ],
     },
 )
