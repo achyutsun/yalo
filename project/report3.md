@@ -183,6 +183,7 @@ $$
 ### 4.3 Entropy Exploration
 
 Overview of entropy-based frontier scoring.
+      IG(f) = Σ_{c ∈ Ω(v)}  H(c)           (raw entropy integration)
 
 Topics to include:
 
