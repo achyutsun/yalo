@@ -7,7 +7,8 @@ nav_order: 3
 
 # Milestone 3: Yalo Mobile Robot      
 
-Team members: Yibo @JerrySyameimaru, Achyut @achyutsun, Long @lhtruong26   <https://www.yalo.space>
+Team members: Yibo @JerrySyameimaru, Achyut @achyutsun, Long @lhtruong26   
+***<p style="text-align:center;"> <https://www.yalo.space></p>***
 
 Arizona State University RAS-598 Mobile Robotics Class  Spring, 2026
 
