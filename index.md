@@ -6,6 +6,7 @@ nav_order: 1
 
 # Yalo Mobile Robot
 Team members: Yibo @JerrySyameimaru, Achyut @achyutsun, Long @lhtruong26
+
 <https://www.yalo.space>
 
 Arizona State University RAS-598 Mobile Robotics Class  Spring, 2026
