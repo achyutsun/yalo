@@ -5,13 +5,13 @@ parent: Project
 nav_order: 3
 ---
 
-# Milestone 3: Yalo Mobile Robot      <https://www.yalo.space>
+# Milestone 3: Yalo Mobile Robot      
 
 Team members: Yibo @JerrySyameimaru, Achyut @achyutsun, Long @lhtruong26
 
 Arizona State University RAS-598 Mobile Robotics Class  Spring, 2026
 
-Professor: Vivek Thangavelu, PhD
+Professor: Vivek Thangavelu, PhD               <https://www.yalo.space>
 
 {: .no_toc }
 
