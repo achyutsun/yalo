@@ -86,8 +86,6 @@ $$
 
 Overview of frontier-based exploration and BFS clustering.
 
-Topics to include:
-
 Frontier Cluster Centroid Calculation
 
 Given a frontier cluster containing \(N\) frontier cells:
@@ -258,40 +256,31 @@ Evaluation of system performance during final mission execution.
 
 ### 5.1 Accuracy
 
-Topics to include:
-
-
-
-*Figure: Example accuracy evaluation plot.*
+During experimental testing, the robot’s estimated trajectory in RViz remained closely aligned with the observed robot motion in the simulation environment. The navigation system was able to follow planned paths consistently while maintaining stable localization throughout exploration.
 
 ---
 
-### 5.2 Error Analysis
-
-Topics to include:
-
-
-
-Example equation:
-
-
----
-
-### 5.3 Success Rate
+### 5.2 Success Rate
 
 Performance evaluation across multiple trials.
 
 | Trial | Result | Notes |
 |------|------|------|
-| 1 | TBD | TBD |
-| 2 | TBD | TBD |
-| 3 | TBD | TBD |
-| 4 | TBD | TBD |
-| 5 | TBD | TBD |
+| 1 | Fail | Goal sent to Nav2 rejected |
+| 2 | Fail | Robot frozen trying to move backward |
+| 3 | Fail | Robot frozen trying to move backward |
+| 4 | First time navigate. Fail in the end | Hit the pillar and get stuck |'
+| 5 | Second time navigate. Fail in the end | Drive under a desk and can not get out. Bad goal chosen |
+| 6 | Third time navigate. Fail in the end | Drive under a desk and can not get out. Bad goal chosen |
+| 7 | Fourth time navigate. Fail in the end | Drive under a desk and can not get out. Bad goal chosen |
+| 8 | Fifth time navigate. Fail in the end | Drive into obstacles and can not get out |
+| 9 | Success | Robot continouously pick goal and update map |
+| 10 | seventh time navigate. Fail in the end | Drive into obstacles and can not get out|
+
 
 ---
 
-### 5.4 Final Mission Video
+### 5.3 Final Mission Video
 
 https://youtu.be/D1sxXO-z0Kw
 
@@ -305,8 +294,6 @@ Topics to include:
 
 
 ---
-
-## 7. Custom Module Code Links
 
 ## 7. Custom Module Code Links
 
@@ -325,13 +312,15 @@ Links to the major custom modules and key commits used in the project.
 
 Discussion of experimental observations and validation.
 
-Topics to include:
-
-- Runtime issues
-- Sensor stability
-- Mapping performance
-- Navigation consistency
-- Environmental challenges
+- Time synchronization mismatch caused TF lookup failures and unstable transform updates between frames.
+- Sensor data remained stable throughout testing, with LiDAR and odometry publishing consistently.
+- SLAM mapping performed successfully and generated a usable occupancy grid map during exploration.
+- Nav2 frequently failed during startup because controller_server could not establish a bond with the lifecycle manager within the timeout period, causing the navigation stack bringup to abort.
+- The robot experienced restricted backward motion and occasionally froze when reverse movement was required.
+- The robot could become stuck in narrow or tight spaces due to limited maneuvering room and local planner constraints.
+- Navigation performance was less stable in cluttered environments with many nearby obstacles.
+- Frontier exploration occasionally selected goals near difficult or partially blocked regions, leading to inefficient recovery behavior.
+- Recovery behavior sometimes increased navigation time due to repeated replanning and obstacle avoidance attempts.
 
 ---
 
