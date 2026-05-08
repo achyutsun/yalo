@@ -194,47 +194,78 @@ Example equation:
 ### 4.4 Decision Making
 
 The decision stage is responsible for turning the frontier set into a single navigation target. In the current implementation, the decision maker reuses the frontier detection and entropy scoring pipeline from `entropy_explorer.py`, then applies an additional motion-cost model before sending the final goal to Nav2. This keeps the exploration behaviour consistent: the robot prefers frontiers with high information gain, but it also avoids goals that are expensive, unstable, or poorly aligned with the current robot heading.
+### 4.4.1 Mathematical Framework
 
-### 4.4.1 Frontier Ranking
+All decision logic is built on four core equations. Here is the complete mathematical model:
 
-Frontiers are first detected from the occupancy grid using the frontier detector. Each frontier is scored using the entropy-based utility produced by `score_frontiers()` in `entropy_explorer.py`:
+**Equation 1: Entropy Utility**
+
+Each frontier is scored by its information gain (computed in `entropy_explorer.py`) and distance-weighted utility:
 
 $$U(f) = \frac{IG(f)}{1 + \lambda \cdot d(robot, f)}$$
 
 where:
-- $$IG(f)$$ is the information gain around the frontier centroid,
-- $$d(robot, f)$$ is the distance from the robot to the frontier,
-- $$\lambda$$ is the distance decay factor.
+- $$IG(f)$$ is the information gain around the frontier centroid (bits),
+- $$d(robot, f)$$ is the Euclidean distance from robot to frontier centroid (metres),
+- $$\lambda$$ is the distance decay factor (≈ 0.35).
+- **The +1:** ensures non-zero denominator and normalises baseline behaviour (frontiers at d=0 have utility = IG).
 
-This ranking favours frontiers that reveal more unknown space, which means the robot is naturally pushed toward regions with higher entropy and lower occupancy certainty.
+The numerator rewards high-information frontiers; the denominator penalises distance, balancing exploration breadth against travel cost.
 
-### 4.4.2 Navigation Feasibility
+**Equation 2: Motion Cost**
 
-After entropy ranking, the decision maker evaluates whether a frontier is practical to reach. The final score combines entropy with a motion-cost estimate that reflects the effort needed to move toward the goal. The motion cost includes:
-
-- **Base drain**: a constant energy cost for keeping the robot active.
-- **Linear cost**: the travel distance to the centroid.
-- **Angular cost**: the heading correction needed to face the target.
-- **Startup tax**: an extra penalty when the robot must accelerate from near standstill.
-
-In simplified form:
+The motion cost estimates the effort required to navigate to a frontier:
 
 $$C(f) = C_{base} + w_v \cdot d(robot,f) + w_\omega \cdot |\Delta\theta| + C_{startup}$$
 
-The motion cost is then normalised and subtracted from the entropy reward, so the final target is not only informative but also feasible to navigate efficiently.
+where:
+- $$C_{base}$$ is a constant baseline cost for robot operation (e.g., 0.05),
+- $$w_v$$ is the linear cost weight per metre (e.g., 1.0),
+- $$d(robot,f)$$ is the Euclidean distance to the frontier,
+- $$w_\omega$$ is the angular cost weight per radian (e.g., 0.6),
+- $$|\Delta\theta|$$ is the absolute heading error (angle to rotate toward the frontier),
+- $$C_{startup}$$ is an optional penalty (e.g., 0.35) applied when the robot starts from near-rest and must travel distance $$> 0.25 \text{ m}$$.
 
-### 4.4.3 Safety Constraints
+This formula models realistic navigation effort: static overhead, linear travel cost, rotation effort, and acceleration penalty.
 
-The decision maker also applies safety and stability constraints before publishing a goal. These constraints prevent the robot from oscillating between targets or selecting goals that are awkward to approach:
+**Equation 3: Normalisation**
 
-- **Rear-goal rejection**: centroid goals behind the robot are filtered out using the heading alignment gate.
-- **Hysteresis**: if a new goal does not improve the score enough, the previous goal is kept.
-- **Same-goal tolerance**: very small goal changes are ignored to avoid unnecessary replanning.
-- **Forward-biased motion**: the robot prefers goals in front of its current heading rather than constantly reversing direction.
+Since $$U(f)$$ and $$C(f)$$ have different units and scales, they are normalised to [0, 1] for fair comparison:
 
-These constraints make the exploration smoother and reduce unstable switching between nearby frontiers.
+$$\tilde{U}(f) = \frac{U(f)}{\max_i U(f_i)}, \quad \tilde{C}(f) = \frac{C(f)}{\max_i C(f_i)}, \quad \tilde{d}_{prev}(f) = \frac{d_{prev}(f)}{\max_i d_{prev}(f_i)}$$
 
-### 4.4.4 Goal Updates
+where $$d_{prev}(f)$$ is the distance from frontier $$f$$ to the previously published goal (for consistency tracking).
+
+**Equation 4: Final Score (Decision Rule)**
+
+The normalised metrics are combined via weighted linear aggregation to produce a final utility score:
+
+$$S(f) = w_{ent} \cdot \tilde{U}(f) - w_{cost} \cdot \tilde{C}(f) - w_{cons} \cdot \tilde{d}_{prev}(f)$$
+
+where:
+- $$w_{ent}$$ is entropy weight (default 1.0; increase for aggressive exploration),
+- $$w_{cost}$$ is motion cost weight (default 0.55; increase for conservative, efficient paths),
+- $$w_{cons}$$ is consistency weight (default 0.45; increase to prefer stability over novelty).
+
+The frontier with the maximum score is selected as the next navigation target
+
+**Interpretation:**
+- Higher $$\tilde{U}(f)$$ (more informative) → **higher score** (positive term).
+- Higher $$\tilde{C}(f)$$ (more costly) → **lower score** (negative term).
+- Farther from previous goal (less consistent) → **lower score** (negative term).
+
+The weights balance these three objectives: information gain, motion efficiency, and goal stability.
+
+### 4.4.2 Stability Mechanisms
+
+After ranking, the decision maker applies hysteresis and goal-matching to prevent oscillation:
+
+- **Hysteresis:** If the best frontier does not improve the score by at least `switch_margin` (default 0.15), the previous goal is retained.
+- **Same-goal tolerance:** If the new best frontier is within `same_goal_tolerance` (default 0.2 m) of the last published goal, the update is skipped to avoid redundant replanning.
+
+These mechanisms ensure smooth, stable exploration without excessive goal switching.
+
+### 4.4.3 Goal Updates
 
 The final navigation target is published only after the best frontier survives ranking, motion-cost evaluation, and hysteresis. The selected centroid is then sent to Nav2 through `/goal_pose`. If the robot is already navigating and the new target is too similar to the previous one, the update is skipped to avoid redundant replanning.
 
