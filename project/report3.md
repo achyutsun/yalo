@@ -7,11 +7,11 @@ nav_order: 3
 
 # Milestone 3: Yalo Mobile Robot      
 
-Team members: Yibo @JerrySyameimaru, Achyut @achyutsun, Long @lhtruong26
+Team members: Yibo @JerrySyameimaru, Achyut @achyutsun, Long @lhtruong26   <https://www.yalo.space>
 
 Arizona State University RAS-598 Mobile Robotics Class  Spring, 2026
 
-Professor: Vivek Thangavelu, PhD               <https://www.yalo.space>
+Professor: Vivek Thangavelu, PhD               
 
 {: .no_toc }
 
@@ -191,9 +191,9 @@ $$
 Overview of entropy-based frontier scoring.
 Yalo Mobile robot uses an entropy-maximising frontier exploration algorithm deployed on the TurtleBot4 mobile platform under ROS 2 Jazzy. The method assigns each candidate frontier an information-gain score derived from Shannon occupancy-grid entropy and selects navigation goals that maximally reduce map uncertainty. A composite ranking function balances exploration drive, path cost, and goal proximity, recovering weighted A* and pure entropy-greedy search as special cases. The algorithm runs as a single ROS 2 lifecycle node, subscribing to /map and /odom and publishing Nav2 goals.
 
-  #### 4.3.1. Mathematical Foundation
+#### 4.3.1. Mathematical Foundation
 
-  ##### 4.3.1.1 Cell Entropy
+##### 4.3.1.1 Cell Entropy
 
   Each cell in the 2-D occupancy grid stores a probability `p ∈ [0, 1]` representing the likelihood of occupancy. The binary Shannon entropy of a single cell is:
 
@@ -202,10 +202,10 @@ H(cell) = −p · log₂(p) − (1−p) · log₂(1−p)
 ```
 
 `H` is maximised at `p = 0.5` (the cell is completely unknown, contributing 1 bit of uncertainty) and collapses to zero at `p = 0` (certainly free) or `p = 1` (certainly occupied). Figure 1 plots this relationship.
-
+![Alt text](../assets/images/yalo_figure1.png)
 > **Figure 1** — Binary entropy H(cell) vs occupancy probability p.
 
-  ##### 4.3.1.2 Information Gain of a Frontier
+##### 4.3.1.2 Information Gain of a Frontier
 
   Given a candidate frontier `f` with associated viewpoint `v`, the sensor footprint `Ω(v)` is the set of grid cells within the RPLIDAR-A1 maximum range `r_sensor` centred on `v`. The expected information gain is approximated by summing cell entropy over this disc:
 
@@ -214,17 +214,17 @@ H(cell) = −p · log₂(p) − (1−p) · log₂(1−p)
   ```
 
   This is a tractable proxy for the true expected posterior entropy reduction. Cells already known (`H ≈ 0`) contribute negligibly; high-entropy unknown cells dominate the sum, steering the robot toward genuinely uncertain regions.
-
+![Alt text](../assets/images/yalo_figure2.png)
   > **Figure 2** — Occupancy grid (left) and entropy map with frontier selection (right). The frontier band is highlighted in deep purple; the orange disc shows the sensor footprint Ω(v) at the selected viewpoint.
   IG(f) = Σ_{c ∈ Ω(v)}  H(c)           (raw entropy integration)
 
-  #### 4.3.2. System Architecture
+#### 4.3.2. System Architecture
 
   The algorithm runs as a single **ROS 2 Jazzy lifecycle node** on the TurtleBot4's Raspberry Pi 4B. It subscribes to the Nav2 costmap (`/map`) and odometry (`/odom`), and publishes navigation goals via the Nav2 action server. Figure 3 illustrates the control loop.
-
+![Alt text](../assets/images/yalo_figure3.png)
   > **Figure 3** — EEA control loop (TurtleBot4 / ROS 2 Jazzy).
 
-  #### 4.3.3. Parameters and Tuning
+#### 4.3.3. Parameters and Tuning
 
   | Parameter | Symbol | Default | Effect |
   |---|---|---|---|
@@ -235,7 +235,7 @@ H(cell) = −p · log₂(p) − (1−p) · log₂(1−p)
   | Min frontier size | — | 5 cells | Filters noise clusters |
 
 
-  #### 4.3.4 What we did
+#### 4.3.4 What we did
 
   We described an entropy-maximising frontier exploration algorithm for the TurtleBot4. By grounding frontier selection in Shannon information theory, the approach provides a principled, interpretable criterion for navigation goal selection. The composite scoring function unifies entropy-greedy and cost-aware strategies through tunable weights, and the implementation integrates directly with the ROS 2 Nav2 stack. Future work will extend the sensor model to account for angular resolution and occlusion, and evaluate coverage completeness against nearest-frontier and random baselines on physical hardware.
 
