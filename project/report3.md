@@ -8,7 +8,7 @@ nav_order: 3
 # Milestone 3: Yalo Mobile Robot      
 
 Team members: Yibo @JerrySyameimaru, Achyut @achyutsun, Long @lhtruong26   
-***<p style="text-align:center;"> <https://www.yalo.space></p>***
+###<https://www.yalo.space>
 
 Arizona State University RAS-598 Mobile Robotics Class  Spring, 2026
 
@@ -222,7 +222,7 @@ H(cell) = −p · log₂(p) − (1−p) · log₂(1−p)
 #### 4.3.2. System Architecture
 
   The algorithm runs as a single **ROS 2 Jazzy lifecycle node** on the TurtleBot4's Raspberry Pi 4B. It subscribes to the Nav2 costmap (`/map`) and odometry (`/odom`), and publishes navigation goals via the Nav2 action server. Figure 3 illustrates the control loop.
-![Alt text](../assets/images/yalo_figure3.png){style="display: block; margin: 0 auto" }
+![Alt text](../assets/images/yalo_figure3.png)
   > **Figure 3** — EEA control loop (TurtleBot4 / ROS 2 Jazzy).
 
 #### 4.3.3. Parameters and Tuning
