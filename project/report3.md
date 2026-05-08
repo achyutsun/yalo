@@ -37,7 +37,7 @@ Topics to include:
 
 ## 2. Graphical Abstract
 
-
+![Alt text](../assets/images/yalo_graphical.png)
 
 
 
