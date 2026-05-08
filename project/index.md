@@ -6,4 +6,4 @@ has_children: true
 ---
 
 # Yalo Project Reports
-[![Watch the video]([https://youtube.com](https://youtu.be/D1sxXO-z0Kw))](
+[![Watch the video]([https://youtube.com](https://youtu.be/D1sxXO-z0Kw))]
